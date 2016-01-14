@@ -1,8 +1,8 @@
 library(shiny)
 
 source("helpers.R")
-# players <- 
-# game <-
+players <- read.csv("data/players.csv")
+game <-
 
 # Define server logic required to draw a histogram
 shinyServer(
