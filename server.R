@@ -2,7 +2,7 @@ library(shiny)
 
 source("helpers.R")
 players <- read.csv("data/players.csv")
-game <-
+gameday <- read.csv("data/gameday.csv")
 
 # Define server logic required to draw a histogram
 require(rNVD3)
