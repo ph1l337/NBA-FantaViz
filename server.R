@@ -32,7 +32,7 @@ shinyServer(function(input, output) {
     }
     
     if(input$var=="Points/Salary"){
-    p1 <- nPlot(Points.Salary ~ Name, group = 'Type', data = players_barplot, type = "multiHorizontalBarChart", stacked=TRUE)
+    p1 <- nPlot(Points.Salary ~ Name, group = 'Type', data = players_barplot, type = "multiBarChart", stacked=TRUE)
     p1$addParams(height = 800, dom = 'chart1', 
                    title = "players")
     }
