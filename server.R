@@ -4,13 +4,12 @@ require(rCharts)
 options(RCHART_WIDTH = 1000)
 #source("helpers.R")
 players <- read.csv("data/players.csv")
-gameday <- read.csv("data/gameday.csv")
+players_barplot <- read.csv("data/players_barplot.csv", sep=";")
 
 # Define server logic required to draw a histogram
 require(rNVD3)
 shinyServer(function(input, output) {
   players <- read.csv("data/players.csv", sep = ";")
-  players_barplot <- read.csv("~/Google Drive/Master/Big Data/Assignments/3_Shiny/NBA-FantaViz/data/players_barplot.csv", sep=";")
 #   output$chart1 <- renderChart({
 #     YEAR = input$year
 #     men <- subset(dat2m, gender == "Men" & year == YEAR)
