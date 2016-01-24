@@ -1,26 +1,29 @@
+require(rCharts)
+options(RCHART_LIB = 'polycharts')
 shinyUI(fluidPage(
-  titlePanel("NBA FantaViz"),
-
-  
   fluidRow(
-    column(width = 4,
-           selectInput(inputId = "gender",
-                       label = "Choose Gender",
-                       choices = c("Male", "Female"),
-                       selected = "Male"),
-           selectInput(inputId = "type",
-                       label = "Choose Chart Type",
-                       choices = c("multiBarChart", "multiBarHorizontalChart"),
-                       selected = "multiBarChart"),
-           checkboxInput(inputId = "stack",
-                         label = strong("Stack Bars?"),
-                         value = FALSE)
-    ),
-    column(width = 5, offset = 0,
-           showOutput("myChart")
-    )
+    titlePanel("NBA FantaViz")
+  ),
+  fluidRow(
+  column(2,
+         
+#          selectInput("day", 
+#                      label = "Choose a game day",
+#                      choices = c("Points", "Points/Salary"),
+#                      selected = "Points"),
+         selectInput("var", 
+                     label = "Choose a variable",
+                     choices = c("Points", "Points/Salary"),
+                     selected = "Points")),
+  column(10,
+    rCharts::showOutput("chart1","nvd3")
   )
-))
-  
-  
-
+)
+#,
+#   fluidRow(
+#     column(7,
+#            DT::dataTableOutput('tab1')
+#     )
+#   )
+)
+)
