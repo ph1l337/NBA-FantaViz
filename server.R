@@ -1,6 +1,12 @@
+#*****Libraries******
 library(shiny)
 library(dplyr)
+#****Requires*******
 require(rCharts)
+#****Sources********
+#Nothing yet.
+
+
 options(RCHART_WIDTH = 1000)
 #source("helpers.R")
 players <- read.csv("data/players.csv")
