@@ -7,7 +7,36 @@ require(rCharts)
 
 options(RCHART_LIB = 'polycharts')
 
-shinyUI(navbarPage("NBA FantaViz",
+shinyUI(navbarPage("NBA FantaViz",       
+      tabPanel("Input",
+              sidebarLayout(
+                  sidebarPanel(
+                      fileInput('file1', 'Choose players file to upload',
+                          accept = c(
+                           'text/csv',
+                           'text/comma-separated-values',
+                            '.csv'
+                          )
+                      ),
+                       #For second file create second fileInput
+                       #fileInput('file2', 'Choose games file to upload',
+                       #          accept = c(
+                       #            'text/csv',
+                       #            'text/comma-separated-values',
+                       #            '.csv'
+                       #          )
+                       #),
+                        p('You can use the templates for players and games:',
+                         a(href = 'https://drive.google.com/file/d/0BynAfCMCfe3wOFRIcjVibl9oaHc/view?usp=sharing', 'playersTemplate.csv'), ',',
+                          a(href = 'https://drive.google.com/file/d/0BynAfCMCfe3waGxDaUNrTFFvcUE/view?usp=sharing', 'gamedayTemplate.csv')
+                        )
+                   ),
+                   mainPanel(
+                         tableOutput('contents')
+                   )
+              )
+   ),
+   
    tabPanel("Players",
             sidebarLayout(
               sidebarPanel(
@@ -32,10 +61,7 @@ shinyUI(navbarPage("NBA FantaViz",
               #     )
               #   )
             ),
-            
-   
     tabPanel("Games",
              fluidRow()
-             
       )
 ))

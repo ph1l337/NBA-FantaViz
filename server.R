@@ -6,14 +6,19 @@ require(rCharts)
 #****Sources********
 #Nothing yet.
 
+#***Related to File upload Tab.
+options(shiny.maxRequestSize = 9*1024^2) #File Upload Max Size (9MB now)
 
+#***Related to Players Tab
 options(RCHART_WIDTH = 700)
-#source("helpers.R")
+
+#Will be connected later with FileUpload
 players <- read.csv("data/players.csv", sep = ";")
 players_barplot <- read.csv("data/players_barplot.csv", sep=";")
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
+  #Server side for players tab.
   output$chart1 <- renderChart({
     if(input$var=="Points"){
      p1 <- nPlot(Points ~ Name, group = 'Type', data = players_barplot, type = "multiBarHorizontalChart")
@@ -33,4 +38,19 @@ shinyServer(function(input, output) {
     players.tableData <- data.frame(players$Name,players$Position,players$Salary)
     DT::datatable(players.tableData,options =list(paging = FALSE))
   })
+  
+  #Server side for file upload tab.
+  output$contents <- renderTable({
+    
+    inFile <- input$file1
+    #inFile2 <- input$file2
+    
+    if (is.null(inFile))
+      return(NULL)
+    
+    #read.csv(inFile$datapath, header = input$header,
+    #         sep = input$sep, quote = input$quote)
+    read.csv(inFile$datapath)
+  })
+  
   })
