@@ -15,4 +15,3 @@ shinyServer(function(input, output) {
     return(p6)
   })
 })
-
