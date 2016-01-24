@@ -7,7 +7,6 @@ players <- read.csv("data/players.csv")
 players_barplot <- read.csv("data/players_barplot.csv", sep=";")
 
 # Define server logic required to draw a histogram
-require(rNVD3)
 shinyServer(function(input, output) {
   players <- read.csv("data/players.csv", sep = ";")
 #   output$chart1 <- renderChart({
@@ -33,7 +32,7 @@ shinyServer(function(input, output) {
     }
     
     if(input$var=="Points/Salary"){
-    p1 <- nPlot(Points.Salary ~ Name, group = 'Type', data = players_barplot, type = "multiBarChart", stacked=TRUE)
+    p1 <- nPlot(Points.Salary ~ Name, group = 'Type', data = players_barplot, type = "multiHorizontalBarChart", stacked=TRUE)
     p1$addParams(height = 800, dom = 'chart1', 
                    title = "players")
     }
