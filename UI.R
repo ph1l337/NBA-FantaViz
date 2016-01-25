@@ -65,29 +65,16 @@ shinyUI(navbarPage("NBA FantaViz",
    
     #********* GAMES TAB ****************
     tabPanel("Games",
-             sidebarLayout(
-               sidebarPanel(
-                 selectInput("gameOption", "Choose an option:", 
-                             choices = c("Total Points / Team", "Game Closeness Ranking"),
-                             selected = "Total Points / Team"),
-                 
-                 helpText("Total Points / Team: Compare total amount of expected points",
-                          "on the full dataset."),
-                 helpText("Game Closeness Ranking: Compare which game will be closer.",
-                          "How is this calculated? (New window link)")
-               ),
-               
-               # Show a summary of the dataset and an HTML table with the
-               # requested number of observations. Note the use of the h4
-               # function to provide an additional header above each output
-               # section.
+             fluidPage(
                mainPanel(
-                 h4("Predicted results"),
-                 div(DT::dataTableOutput("summary"), style = "font-size:80%"),
+                 h4("Daily Information"),
+                 div(DT::dataTableOutput("summary"), style = "font-size:90%"),
                  
-                 #Should change depending on the selected option
-                 h4("Total Points / Team"),
-                 rCharts::showOutput("games1","nvd3") 
+                 h4("Teams over/under media"),
+                 rCharts::showOutput("games1","nvd3"), 
+                 
+                 h4("Closeness Ranking"),
+                 rCharts::showOutput("games2","nvd3") 
                )
              )
       )

@@ -13,9 +13,10 @@ options(shiny.maxRequestSize = 9*1024^2) #File Upload Max Size (9MB now)
 options(RCHART_WIDTH = 700)
 
 #Will be connected later with FileUpload
-gameday <- read.csv("data/gameday.csv")
-totalPoints_Game <- read.csv("data/gameday.csv") 
-gameCR <- read.csv("data/gameday.csv")
+gameday <- read.csv("data/gamedayOption2.csv")
+gamedayTable <- read.csv("data/gamedayTable.csv") 
+gameday101 <- read.csv("data/gameday101.csv") 
+gamedayCloseness <- read.csv("data/gamedayTable.csv")
 players <- read.csv("data/players.csv",stringsAsFactors=FALSE)
 # players_barplot<- read.csv("data/players_barplot.csv", sep=";")
 
@@ -84,29 +85,15 @@ shinyServer(function(input, output) {
   })
   
   #********* Server side for games ******************
-  datasetInput <- reactive({
-    switch(input$gameOption,
-           "Total Points / Team" = totalPoints_Game,
-           "Game Closeness Ranking" = gameCR)
-  })
-  
-  # Generate a summary of the dataset
+  # Table View
   output$summary <- DT::renderDataTable(
-    DT::datatable(gameday, options = list(paging = FALSE, searching=FALSE, autoWidth = TRUE,
-                                          columnDefs = list(list(width = '60px', targets = "_all"))))
+    DT::datatable(gamedayTable, options = list(paging = FALSE, searching=FALSE, autoWidth = TRUE,
+                                          columnDefs = list(list(width = '80px', targets = "_all"))))
   )
-    
-  #output$summary <- renderDataTable({
-  #  dataset <- datasetInput()
-  #  })
-  # Show the first "n" observations set to 20 default
-  #output$view <- renderTable({
-  #  head(datasetInput(), n = 20)
- 
   
-    output$games1 <- renderChart({ 
-  
-      p2 <- nPlot(Points ~ Team, data = totalPoints_Game, type = "multiBarChart")
+  # 101 View
+  output$games1 <- renderChart({ 
+      p2 <- nPlot(Points ~ Team, data = gameday101, type = "multiBarChart")
       p2$yAxis(axisLabel = "Points")
       p2$xAxis(axisLabel = "Teams")
       p2$addParams(height = 300, dom = 'games1', title = "games" )
@@ -115,4 +102,19 @@ shinyServer(function(input, output) {
       return(p2)
       
   })
+  
+  
+  # Closeness View
+  output$games2 <- renderChart({ 
+    p2 <- nPlot(Points ~ Team, data = gameday101 , type = 'scatterChart') 
+    #p2$yAxis(axisLabel = "Points")
+    p2$xAxis(axisLabel = "Teams")
+    #p2$addParams(height = 300, dom = 'games1', title = "games" )
+    #p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 100))
+    #options(RCHART_WIDTH = 400)
+    return(p2)
+    
+  })
+  
+  
 })
