@@ -83,11 +83,11 @@ shinyUI(navbarPage("NBA FantaViz",
                # section.
                mainPanel(
                  h4("Predicted results"),
-                 verbatimTextOutput("summary"),
+                 div(DT::dataTableOutput("summary"), style = "font-size:80%"),
                  
                  #Should change depending on the selected option
                  h4("Total Points / Team"),
-                 tableOutput("view")
+                 rCharts::showOutput("games1","nvd3") 
                )
              )
       )
