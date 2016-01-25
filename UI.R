@@ -65,10 +65,14 @@ shinyUI(navbarPage("NBA FantaViz",
 #                                    ),
                        
                         sliderInput("salary", "Salary:",
-                                   min = 0, max = 15000, value = c(0,15000))
+                                   min = 0, max = 15000, value = c(0,15000)),
+                        uiOutput("choose_team")
                          ),
                         column(width=4)),
-              fluidRow(helpText("Note: Names of the players will apear when less than 50 are displayed or when hovering the mouse over the bar",align="center")),
+              fluidRow(
+                br(),br(),br(),
+                helpText("Note: Names of the players will apear when less than 50 are displayed or when hovering the mouse over the bar",align="center"),
+                br(),br(),br(),br(),br()),
               fluidRow(
               
                        rCharts::showOutput("chart1","nvd3")
