@@ -41,7 +41,6 @@ shinyServer(function(input, output) {
   
   #Server side for file upload tab.
   output$contents <- renderTable({
-    
     inFile <- input$file1
     #inFile2 <- input$file2
     
@@ -53,4 +52,4 @@ shinyServer(function(input, output) {
     read.csv(inFile$datapath)
   })
   
-  })
+})

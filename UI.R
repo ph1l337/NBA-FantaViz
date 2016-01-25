@@ -7,7 +7,8 @@ require(rCharts)
 
 options(RCHART_LIB = 'polycharts')
 
-shinyUI(navbarPage("NBA FantaViz",       
+shinyUI(navbarPage("NBA FantaViz", 
+      #********* INPUT TAB****************
       tabPanel("Input",
               sidebarLayout(
                   sidebarPanel(
@@ -36,7 +37,7 @@ shinyUI(navbarPage("NBA FantaViz",
                    )
               )
    ),
-   
+   #********* PLAYERS TAB ****************
    tabPanel("Players",
             sidebarLayout(
               sidebarPanel(
@@ -61,7 +62,35 @@ shinyUI(navbarPage("NBA FantaViz",
               #     )
               #   )
             ),
+   
+    #********* GAMES TAB ****************
     tabPanel("Games",
-             fluidRow()
+             sidebarLayout(
+               sidebarPanel(
+                 selectInput("dataset", "Choose an option:", 
+                             choices = c("Total Points / Team", "Game Closeness Ranking"),
+                             selected = "Total Points / Team"),
+                 
+                 helpText("Total Points / Team: Compare total amount of expected points",
+                          "on the full dataset."),
+                 helpText("Game Closeness Ranking: Compare which game will be closer.",
+                          "How is this calculated? (New window link)"), #ADD LINK TO SMALL WINDOW
+                 
+                 submitButton("Update View")
+               ),
+               
+               # Show a summary of the dataset and an HTML table with the
+               # requested number of observations. Note the use of the h4
+               # function to provide an additional header above each output
+               # section.
+               mainPanel(
+                 h4("Summary"),
+                 verbatimTextOutput("summary"),
+                 
+                 #Should change depending on the selected option
+                 h4("Total Points / Team"),
+                 tableOutput("view")
+               )
+             )
       )
 ))
