@@ -58,7 +58,7 @@ shinyUI(navbarPage("NBA FantaViz",
 #                                    ),
                        
                        sliderInput("salary", "Salary:",
-                                   min = 15000, max = 55000, value = c(0,100000))
+                                   min = 0, max = 15000, value = c(0,15000))
                        ),
               
                       
