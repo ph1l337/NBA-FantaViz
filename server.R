@@ -140,7 +140,7 @@ shinyServer(function(input, output) {
     p2$yAxis(axisLabel = "Total Points")
     p2$xAxis(axisLabel = "Point Difference")
     #p2$chart(size = '#! function(d){return d.Game.Ranking} !#')
-    p2$chart(sizeRange = c(150,150))
+    p2$chart(sizeRange = c(300,300))
     p2$chart(showControls = FALSE)
     p2$chart( xDomain = sort(range(gamedayTableZone$Difference),decreasing=T) )
     #p2$addParams(height = 300, dom = 'games1', title = "games" )
