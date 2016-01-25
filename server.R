@@ -13,9 +13,9 @@ options(shiny.maxRequestSize = 9*1024^2) #File Upload Max Size (9MB now)
 options(RCHART_WIDTH = 700)
 
 #Will be connected later with FileUpload
-gameday <- read.csv("data/gameday.csv",sep=",")
-totalPoints_Game <- read.csv("data/gameday.csv",sep=";") 
-gameCR <- read.csv("data/gameday.csv",sep=";")
+gameday <- read.csv("data/gameday.csv")
+totalPoints_Game <- read.csv("data/gameday.csv") 
+gameCR <- read.csv("data/gameday.csv")
 players <- read.csv("data/players.csv",stringsAsFactors=FALSE)
 # players_barplot<- read.csv("data/players_barplot.csv", sep=";")
 
