@@ -11,7 +11,7 @@ require(rCharts)
 options(shiny.maxRequestSize = 9*1024^2) #File Upload Max Size (9MB now)
 
 #***Related to Players Tab
-options(RCHART_WIDTH = 700)
+options(RCHART_WIDTH = 800)
 
 #Will be connected later with FileUpload
 gameday <- read.csv("data/gamedayOption2.csv")
@@ -47,14 +47,25 @@ players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*10
 
 
 
-# Define server logic required to draw a histogram
 shinyServer(function(input, output) {
+  
+  
+  #***********Dynamic UI elements*************
+  output$choose_team <- renderUI({
+    teams <- c("ALL")
+    teams <- c(teams,unique(players$Team))
+    selectInput("choose_team", "Team:", teams)
+  })
   
   
   #***********Server side for players tab.*************
   output$chart1 <- renderChart({
     
     players.toPlot <- dplyr::filter(players_barplot, (Salary >= input$salary[1]) , (Salary <= input$salary[2]))
+    if(input$choose_team != "ALL"){
+    players.toPlot <- dplyr::filter(players_barplot, (Team == input$choose_team))  
+    }
+   
 #     players.toPlot <- dplyr::arrange(players.toPlot, Points)
 
     if(input$player_attr=="Points"){
@@ -69,8 +80,8 @@ shinyServer(function(input, output) {
      
     }
     
-    p1$addParams(height = 400, width = 1500, dom = 'chart1', title = "players")
-    p1$chart(stacked = TRUE,margin = list(left=50, right = 70, bottom = 150), color = c('#ffb729','#ff353e','#519399'))
+    p1$addParams(height = 400, width = 1200, dom = 'chart1', title = "players")
+    p1$chart(stacked = TRUE,margin = list(left=100, right = 70, bottom = 150), color = c('#ffb729','#ff353e','#519399'))
     p1$xAxis(width = 300)
     p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
    
