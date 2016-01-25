@@ -50,7 +50,7 @@ shinyUI(navbarPage("NBA FantaViz",
                        selectInput("var",
                                    label = "Choose a variable",
                                    choices = c("Points", "Points/Salary"),
-                                   selected = "Points")),
+                                   selected = "Points/Salary")),
                 mainPanel(
                        rCharts::showOutput("chart1","nvd3")
                 )
