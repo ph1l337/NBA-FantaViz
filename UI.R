@@ -28,8 +28,8 @@ shinyUI(navbarPage("NBA FantaViz",
                        #          )
                        #),
                         p('You can use the templates for players and games:',
-                         a(href = 'https://drive.google.com/file/d/0BynAfCMCfe3wOFRIcjVibl9oaHc/view?usp=sharing', 'playersTemplate.csv'), ',',
-                          a(href = 'https://drive.google.com/file/d/0BynAfCMCfe3waGxDaUNrTFFvcUE/view?usp=sharing', 'gamedayTemplate.csv')
+                         a(href = 'resources/playersTemplate.csv', 'playersTemplate.csv'), ',',
+                          a(href = 'resources/gamedayTemplate.csv', 'gamedayTemplate.csv')
                         )
                    ),
                    mainPanel(
@@ -41,8 +41,8 @@ shinyUI(navbarPage("NBA FantaViz",
    tabPanel("Players",
             sidebarLayout(
               sidebarPanel(
-                
-                       
+                        helpText("Choose, whether you want to look at the absolute point or the points related to their salary."),
+                        
                        #          selectInput("day",
                        #                      label = "Choose a game day",
                        #                      choices = c("Points", "Points/Salary"),
