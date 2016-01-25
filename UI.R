@@ -74,9 +74,7 @@ shinyUI(navbarPage("NBA FantaViz",
                  helpText("Total Points / Team: Compare total amount of expected points",
                           "on the full dataset."),
                  helpText("Game Closeness Ranking: Compare which game will be closer.",
-                          "How is this calculated? (New window link)"), #ADD LINK TO SMALL WINDOW
-                 
-                 submitButton("Update View")
+                          "How is this calculated? (New window link)")
                ),
                
                # Show a summary of the dataset and an HTML table with the
