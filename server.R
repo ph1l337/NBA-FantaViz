@@ -10,14 +10,36 @@ require(rCharts)
 options(shiny.maxRequestSize = 9*1024^2) #File Upload Max Size (9MB now)
 
 #***Related to Players Tab
-#options(RCHART_WIDTH = 700)
+options(RCHART_WIDTH = 700)
 
 #Will be connected later with FileUpload
-gameday <- read.csv("data/gameday.csv")
-totalPoints_Game <- read.csv("data/gamedayProcessed1.csv") 
-gameCR <- read.csv("data/gamedayProcessed1.csv") 
-players <- read.csv("data/players.csv", sep = ";")
-players_barplot <- read.csv("data/players_barplot.csv", sep=";")
+gameday <- read.csv("data/gameday.csv",sep=",")
+totalPoints_Game <- read.csv("data/gameday.csv",sep=";") 
+gameCR <- read.csv("data/gameday.csv",sep=";")
+players <- read.csv("data/players.csv",stringsAsFactors=FALSE)
+# players_barplot<- read.csv("data/players_barplot.csv", sep=";")
+
+
+#creating data.frame for barplot
+  players_barplot<-data.frame(Position = character(),
+                              Name = character(),
+                              Salary = integer(),
+                              Team = character(),
+                              vsTeam = character(),
+                              Minutes.Average = double(),
+                              Points.Type = character(),
+                              Points = double(),
+                              stringsAsFactors=FALSE
+                              )
+# players_barplot<-as.data.frame(matrix(seq(nrow(players)*3*ncol(players)),nrow = nrow(players)*3,ncol = ncol(players)-1))
+  # players_barplot <- dplyr::tbl_dt(players_barplot)  
+# players_barplot <- dplyr::tbl_dt(players_barplot)
+for(i in 1:nrow(players)){
+  players_barplot[(i*3)-2,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Floor",players$Floor.Points[i])
+  players_barplot[(i*3)-1,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Projected",players$Projected.Points[i])
+  players_barplot[(i*3),] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Ceiling",players$Ceiling.Points[i])
+}
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
@@ -34,7 +56,7 @@ shinyServer(function(input, output) {
      p1$yAxis(axisLabel = "Points/Salary * 10000")
     }
     
-    p1$addParams(height = 1000, dom = 'chart1', title = "players")
+    p1$addParams(height = 800, dom = 'chart1', title = "players")
     p1$chart(stacked = TRUE,margin = list(left=150, right = 70, bottom = 100), color = c('#ffb729','#ff353e','#519399'))
     p1$xAxis(width = 300)
     
@@ -69,28 +91,13 @@ shinyServer(function(input, output) {
   })
   
   # Generate a summary of the dataset
-  output$summary <- DT::renderDataTable(
-    DT::datatable(gameday, options = list(paging = FALSE, searching=FALSE, autoWidth = TRUE,
-                                          columnDefs = list(list(width = '60px', targets = "_all"))))
-  )
-    
-  #output$summary <- renderDataTable({
-  #  dataset <- datasetInput()
-  #  })
+  output$summary <- renderPrint({
+    dataset <- datasetInput()
+    summary(dataset)
+  })
+  
   # Show the first "n" observations set to 20 default
-  #output$view <- renderTable({
-  #  head(datasetInput(), n = 20)
- 
-  
-    output$games1 <- renderChart({ 
-  
-      p2 <- nPlot(Points ~ Team, data = totalPoints_Game, type = "multiBarChart")
-      p2$yAxis(axisLabel = "Points")
-      p2$xAxis(axisLabel = "Teams")
-      p2$addParams(height = 300, dom = 'games1', title = "games" )
-      p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 100))
-      #options(RCHART_WIDTH = 400)
-      return(p2)
-      
+  output$view <- renderTable({
+    head(datasetInput(), n = 20)
   })
 })
