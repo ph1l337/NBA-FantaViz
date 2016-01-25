@@ -117,7 +117,10 @@ shinyServer(function(input, output) {
   
   # 101 View
   output$games1 <- renderChart({ 
-      p2 <- nPlot(Points ~ Team, data = gameday101, type = "multiBarChart")
+    gameday101$Game.Quantity <- factor(gameday101$Game.Quantity, levels = c("High Score", "Average Score", "Low Score"), ordered = TRUE) # re-order the factors
+    gameday101 <- gameday101[order(gameday101$Game.Quantity), ] # re-order the variables
+    
+      p2 <- nPlot(Points ~ Team, data = gameday101, group='Game.Quantity', type = 'multiBarChart')
       p2$yAxis(axisLabel = "Points")
       p2$xAxis(axisLabel = "Teams")
       p2$addParams(height = 300, dom = 'games1', title = "games" )
@@ -149,6 +152,8 @@ shinyServer(function(input, output) {
     return(p2)
     
   })
+  
+  
   
   
 })
