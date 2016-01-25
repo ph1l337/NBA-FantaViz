@@ -50,7 +50,18 @@ shinyUI(navbarPage("NBA FantaViz",
                        selectInput("var",
                                    label = "Choose a variable",
                                    choices = c("Points", "Points/Salary"),
-                                   selected = "Points/Salary")),
+                                   selected = "Points"),
+#                        selectInput("sorting",
+#                                    label="Sorty by",
+#                                    choices = c("Projected","Floor","Ceiling"),
+#                                    selected = "Projected"
+#                                    ),
+                       
+                       sliderInput("salary", "Salary:",
+                                   min = 15000, max = 55000, value = c(0,100000))
+                       ),
+              
+                      
                 mainPanel(
                        rCharts::showOutput("chart1","nvd3")
                 )
