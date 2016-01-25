@@ -57,22 +57,34 @@ shinyServer(function(input, output) {
     players.toPlot <- dplyr::filter(players_barplot, (Salary >= input$salary[1]) , (Salary <= input$salary[2]))
 #     players.toPlot <- dplyr::arrange(players.toPlot, Points)
 
-    if(input$var=="Points"){
+    if(input$player_attr=="Points"){
      p1 <- nPlot(Points ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarChart")
      p1$yAxis(axisLabel = "Points")
+     
     }
     
-    if(input$var=="Points/Salary"){
+    if(input$player_attr=="Points/Salary"){
      p1 <- nPlot(Points.Salary ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarChart")
      p1$yAxis(axisLabel = "Points/Salary * 1000")
+     
     }
     
-    p1$addParams(height = 2000, dom = 'chart1', title = "players")
-    p1$chart(stacked = TRUE,margin = list(left=150, right = 70, bottom = 100), color = c('#ffb729','#ff353e','#519399'))
+    p1$addParams(height = 400, width = 1500, dom = 'chart1', title = "players")
+    p1$chart(stacked = TRUE,margin = list(left=50, right = 70, bottom = 150), color = c('#ffb729','#ff353e','#519399'))
     p1$xAxis(width = 300)
-    p1$chart(reduceXTicks = FALSE)
-    p1$xAxis(staggerLabels = TRUE)
+    p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
+   
+    # p1$xAxis(staggerLabels = TRUE)
     
+    #50
+    if(nrow(players.toPlot)/3>55){
+      p1$chart(showXAxis=FALSE)
+    }
+#     if(players.toPlot<=50){
+#       p1$chart(showXAxis=TRUE)
+#     }
+    
+#     
     return(p1)
     
   })

@@ -39,30 +39,38 @@ shinyUI(navbarPage("NBA FantaViz",
    ),
    #********* PLAYERS TAB ****************
    tabPanel("Players",
-            sidebarLayout(
-              sidebarPanel(
-                        helpText("Choose, whether you want to look at the absolute point or the points related to their salary."),
+            fluidPage(
+              fluidRow(column(width=4,
+                              h3("Introduction"),
+                              helpText("Blaa")),
+                       column(width=4,
+                        h3("Attributes"),
+                        helpText("Choose the attributes on how you want to compare the players"),
                         
                        #          selectInput("day",
                        #                      label = "Choose a game day",
                        #                      choices = c("Points", "Points/Salary"),
                        #                      selected = "Points"),
-                       selectInput("var",
+                       selectInput("player_attr",
                                    label = "Choose a variable",
                                    choices = c("Points", "Points/Salary"),
-                                   selected = "Points"),
+                                   selected = "Points")
+                       ),
+                       column(width=4,
+                         h3("Filter"),
 #                        selectInput("sorting",
 #                                    label="Sorty by",
 #                                    choices = c("Projected","Floor","Ceiling"),
 #                                    selected = "Projected"
 #                                    ),
                        
-                       sliderInput("salary", "Salary:",
+                        sliderInput("salary", "Salary:",
                                    min = 0, max = 15000, value = c(0,15000))
-                       ),
+                         ),
+                        column(width=4)),
+              fluidRow(helpText("Note: Names of the players will apear when less than 50 are displayed or when hovering the mouse over the bar",align="center")),
+              fluidRow(
               
-                      
-                mainPanel(
                        rCharts::showOutput("chart1","nvd3")
                 )
               )
