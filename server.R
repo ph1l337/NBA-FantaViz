@@ -133,6 +133,9 @@ shinyServer(function(input, output) {
   
   # Closeness View
   output$games2 <- renderChart2({ 
+    gamedayTableZone$Game.Zone <- factor(gamedayTableZone$Game.Zone, levels = c("Very Hot", "Hot", "Medium", "Cold", "Very Cold"), ordered = TRUE) # re-order the factors
+    gamedayTableZone <- gamedayTableZone[order(gamedayTableZone$Game.Zone), ] # re-order the variables
+    
     p2 <- nPlot(Total.Points ~ Difference, data = gamedayTableZone, group='Game.Zone',type = 'scatterChart') 
     p2$yAxis(axisLabel = "Total Points")
     p2$xAxis(axisLabel = "Point Difference")
