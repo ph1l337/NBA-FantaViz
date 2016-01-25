@@ -88,5 +88,9 @@ shinyUI(navbarPage("NBA FantaViz",
                  rCharts::showOutput("games2","nvd3") 
                )
              )
+      ),
+      #********* About TAB ****************
+      tabPanel("About",
+         fluidPage()
       )
 ))
