@@ -1,9 +1,10 @@
-Team,Points
-GSW,-4.5
-BOS,1.5
-DET,-1
-PHI,0
-OKC,1.5
-UTA,-3
-CLE,0
-ORL,-8
+Team,Points,Game Quantity
+GSW,-4.5,Low Score
+BOS,1.5,Average Score
+DET,-1,Average Score
+PHI,0,Average Score
+OKC,1.5,Average Score
+UTA,-3,Low Score
+CLE,0,Average Score
+ORL,-8,Low Score
+
