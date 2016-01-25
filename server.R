@@ -16,8 +16,30 @@ options(RCHART_WIDTH = 700)
 gameday <- read.csv("data/gameday.csv",sep=",")
 totalPoints_Game <- read.csv("data/gameday.csv",sep=";") 
 gameCR <- read.csv("data/gameday.csv",sep=";")
-players <- read.csv("data/players.csv", sep = ";")
-players_barplot <- read.csv("data/players_barplot.csv", sep=";")
+players <- read.csv("data/players.csv",stringsAsFactors=FALSE)
+# players_barplot<- read.csv("data/players_barplot.csv", sep=";")
+
+
+#creating data.frame for barplot
+  players_barplot<-data.frame(Position = character(),
+                              Name = character(),
+                              Salary = integer(),
+                              Team = character(),
+                              vsTeam = character(),
+                              Minutes.Average = double(),
+                              Points.Type = character(),
+                              Points = double(),
+                              stringsAsFactors=FALSE
+                              )
+# players_barplot<-as.data.frame(matrix(seq(nrow(players)*3*ncol(players)),nrow = nrow(players)*3,ncol = ncol(players)-1))
+  # players_barplot <- dplyr::tbl_dt(players_barplot)  
+# players_barplot <- dplyr::tbl_dt(players_barplot)
+for(i in 1:nrow(players)){
+  players_barplot[(i*3)-2,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Floor",players$Floor.Points[i])
+  players_barplot[(i*3)-1,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Projected",players$Projected.Points[i])
+  players_barplot[(i*3),] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Ceiling",players$Ceiling.Points[i])
+}
+
 
 # Define server logic required to draw a histogram
 shinyServer(function(input, output) {
