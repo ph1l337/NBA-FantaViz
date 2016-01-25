@@ -17,7 +17,7 @@ options(RCHART_WIDTH = 700)
 gameday <- read.csv("data/gamedayOption2.csv")
 gamedayTable <- read.csv("data/gamedayTable.csv") 
 gameday101 <- read.csv("data/gameday101.csv") 
-gamedayCloseness <- read.csv("data/gamedayTable.csv")
+gamedayTableZone <- read.csv("data/gamedayTableZone.csv") 
 players <- dplyr::tbl_df(data.table(read.csv("data/players.csv",stringsAsFactors=FALSE)))
 # players_barplot<- read.csv("data/players_barplot.csv", sep=";")
 
@@ -117,9 +117,12 @@ shinyServer(function(input, output) {
   
   # Closeness View
   output$games2 <- renderChart2({ 
-    p2 <- nPlot(Points ~ Team, data = gameday101 , type = 'scatterChart') 
-    #p2$yAxis(axisLabel = "Points")
-    p2$xAxis(axisLabel = "Teams")
+    p2 <- nPlot(Total.Points ~ Difference, data = gamedayTableZone, group='Game.Zone',type = 'scatterChart') 
+    p2$yAxis(axisLabel = "Total Points")
+    p2$xAxis(axisLabel = "Point Difference")
+    #p2$chart(size = '#! function(d){return d.Game.Ranking} !#')
+    p2$chart(sizeRange = c(150,150))
+    p2$chart(showControls = FALSE)
     #p2$addParams(height = 300, dom = 'games1', title = "games" )
     #p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 100))
     #options(RCHART_WIDTH = 400)

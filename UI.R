@@ -81,10 +81,10 @@ shinyUI(navbarPage("NBA FantaViz",
                  h4("Daily Information"),
                  div(DT::dataTableOutput("summary"), style = "font-size:90%"),
                  
-                 h4("Teams over/under media"),
+                 h4("Teams Over/Under media"),
                  rCharts::showOutput("games1","nvd3"), 
                  
-                 h4("Closeness Ranking"),
+                 h4("Closeness Ranking vs Total Points "),
                  rCharts::showOutput("games2","nvd3") 
                )
              )
