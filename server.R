@@ -43,7 +43,7 @@ players_barplot$Points <- as.numeric(players_barplot$Points)
 players_barplot$Minutes.Average <- as.numeric(players_barplot$Minutes.Average)
 players_barplot$Salary<- as.numeric(players_barplot$Salary)
 
-players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*10000)
+players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*1000)
 
 
 
@@ -54,24 +54,37 @@ shinyServer(function(input, output) {
   #***********Server side for players tab.*************
   output$chart1 <- renderChart({
     
-    players.toPlot <- dplyr::filter(players_barplot, Salary >= input$salary[1] , (Salary <= input$salary[2]))
+    players.toPlot <- dplyr::filter(players_barplot, (Salary >= input$salary[1]) , (Salary <= input$salary[2]))
 #     players.toPlot <- dplyr::arrange(players.toPlot, Points)
-    
-   
-    if(input$var=="Points"){
-     p1 <- nPlot(Points ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarHorizontalChart")
+
+    if(input$player_attr=="Points"){
+     p1 <- nPlot(Points ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarChart")
      p1$yAxis(axisLabel = "Points")
+     
     }
     
-    if(input$var=="Points/Salary"){
-     p1 <- nPlot(Points.Salary ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarHorizontalChart")
-     p1$yAxis(axisLabel = "Points/Salary * 10000")
+    if(input$player_attr=="Points/Salary"){
+     p1 <- nPlot(Points.Salary ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarChart")
+     p1$yAxis(axisLabel = "Points/Salary * 1000")
+     
     }
     
-    p1$addParams(height = 2000, dom = 'chart1', title = "players")
-    p1$chart(stacked = TRUE,margin = list(left=150, right = 70, bottom = 100), color = c('#ffb729','#ff353e','#519399'))
+    p1$addParams(height = 400, width = 1500, dom = 'chart1', title = "players")
+    p1$chart(stacked = TRUE,margin = list(left=50, right = 70, bottom = 150), color = c('#ffb729','#ff353e','#519399'))
     p1$xAxis(width = 300)
+    p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
+   
+    # p1$xAxis(staggerLabels = TRUE)
     
+    #50
+    if(nrow(players.toPlot)/3>55){
+      p1$chart(showXAxis=FALSE)
+    }
+#     if(players.toPlot<=50){
+#       p1$chart(showXAxis=TRUE)
+#     }
+    
+#     
     return(p1)
     
   })
@@ -109,6 +122,9 @@ shinyServer(function(input, output) {
       p2$xAxis(axisLabel = "Teams")
       p2$addParams(height = 300, dom = 'games1', title = "games" )
       p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 0))
+      p2$chart(reduceXTicks = FALSE)
+      p2$xAxis(staggerLabels = TRUE)
+      
       #options(RCHART_WIDTH = 400)
       return(p2)
       
