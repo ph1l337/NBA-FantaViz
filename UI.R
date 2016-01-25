@@ -67,7 +67,7 @@ shinyUI(navbarPage("NBA FantaViz",
     tabPanel("Games",
              sidebarLayout(
                sidebarPanel(
-                 selectInput("dataset", "Choose an option:", 
+                 selectInput("gameOption", "Choose an option:", 
                              choices = c("Total Points / Team", "Game Closeness Ranking"),
                              selected = "Total Points / Team"),
                  
@@ -84,7 +84,7 @@ shinyUI(navbarPage("NBA FantaViz",
                # function to provide an additional header above each output
                # section.
                mainPanel(
-                 h4("Summary"),
+                 h4("Predicted results"),
                  verbatimTextOutput("summary"),
                  
                  #Should change depending on the selected option
