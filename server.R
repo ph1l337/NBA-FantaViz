@@ -2,6 +2,7 @@
 library(shiny)
 library(dplyr)
 library(data.table)
+library(shinyjs)
 #****Requires*******
 require(rCharts)
 #****Sources********
@@ -99,7 +100,9 @@ shinyServer(function(input, output) {
     players_barplot <- transform(players_barplot, Points.Minute = (Points/Minutes.Average))
     players_barplot <<- players_barplot
     players <<- players
-    return(players)
+    players
+    shinyjs::js$refresh()
+    
     
   })
   
@@ -113,14 +116,59 @@ shinyServer(function(input, output) {
     
     gameday <- read.csv(inFile$datapath, header = input$header,
                         sep = input$sep, quote = input$quote, stringsAsFactors=FALSE)
+    
+    
+    ###put transformations here and use <<- to assign to vars outside of function.
+    ###Also add the transforamtions in the begginnig, with the demo data.
+    
     gameday <<- gameday
     
-    return(gameday)
+    gameday
+    shinyjs::js$refresh()
     
   })
   
   
-  #*****Transformation of data  *******#####
+  #*************Reload Demo Data ************#
+  
+  observeEvent(input$reset,{
+    gameday <<- read.csv("data/gamedayOption2.csv")
+    gamedayTable <<- read.csv("data/gamedayTable.csv") 
+    gameday101 <<- read.csv("data/gameday101.csv") 
+    gamedayTableZone <<- read.csv("data/gamedayTableZone.csv") 
+    players <<- dplyr::tbl_df(data.table(read.csv("data/players.csv",stringsAsFactors=FALSE)))
+    # players_barplot<- read.csv("data/players_barplot.csv", sep=";")
+    
+    
+    #creating data.frame for barplot
+    players_barplot<-dplyr::tbl_df(data.table(data.frame(Position = character(),
+                                                         Name = character(),
+                                                         Salary = integer(),
+                                                         Team = character(),
+                                                         vsTeam = character(),
+                                                         Minutes.Average = double(),
+                                                         Points.Type = character(),
+                                                         Points = double(),
+                                                         stringsAsFactors=FALSE
+    )))
+    
+    for(i in 1:nrow(players)){
+      players_barplot[(i*3)-2,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Floor",players$Floor.Points[i])
+      players_barplot[(i*3)-1,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Projected",players$Projected.Points[i])
+      players_barplot[(i*3),] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Ceiling",players$Ceiling.Points[i])
+    }
+    players_barplot$Points <- as.numeric(players_barplot$Points)
+    players_barplot$Minutes.Average <- as.numeric(players_barplot$Minutes.Average)
+    players_barplot$Salary<- as.numeric(players_barplot$Salary)
+    
+    players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*1000)
+    players_barplot <- transform(players_barplot, Points.Minute = (Points/Minutes.Average))
+    
+    players_barplot <<- players_barplot
+    
+    shinyjs::js$refresh()
+    
+  })
   
   
   #***********Server side for players tab.*************
