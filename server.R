@@ -54,8 +54,13 @@ shinyServer(function(input, output) {
   #***********Dynamic UI elements*************
   output$choose_team <- renderUI({
     # teams <- c("ALL")
-    teams <- c(teams,unique(players$Team))
+    teams <- unique(players$Team)
     selectizeInput("choose_team", "Teams: \n", choices = teams, selected = teams, multiple = TRUE)
+  })
+  
+  output$predicition_type <- renderUI({
+    type <- unique(players_barplot$Points.Type)
+    checkboxGroupInput("predicition_type","Select Prediction Type:",type,inline = TRUE)
   })
   
   

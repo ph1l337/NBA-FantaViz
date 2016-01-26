@@ -54,8 +54,10 @@ shinyUI(navbarPage("NBA FantaViz",
                        selectInput("player_attr",
                                    label = "Choose a variable",
                                    choices = c("Points", "Points/Salary","Points/Minute"),
-                                   selected = "Points")
+                                   selected = "Points"),
+                       uiOutput("predicition_type")
                        ),
+                       
                        column(width=4,
                          h3("Filter"),
 #                        selectInput("sorting",
