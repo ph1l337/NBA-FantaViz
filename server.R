@@ -165,7 +165,95 @@ shinyServer(function(input, output) {
     p2$chart(tooltipContent = "#! function(key, x, y, e ){ 
       var d = e.series.values[e.pointIndex];
       return ' Game: ' + d.Home + ' vs ' + d.Away
-} !#")
+      } !#")
+    p2$setTemplate(script = sprintf("
+      <script type='text/javascript'>
+                                    $(document).ready(function(){
+                                    draw{{chartId}}()
+                                    });
+                                    function draw{{chartId}}(){  
+                                    var opts = {{{ opts }}},
+                                    data = {{{ data }}}
+                                    
+                                    if(!(opts.type==='pieChart' || opts.type==='sparklinePlus' || opts.type==='bulletChart')) {
+                                    var data = d3.nest()
+                                    .key(function(d){
+                                    //return opts.group === undefined ? 'main' : d[opts.group]
+                                    //instead of main would think a better default is opts.x
+                                    return opts.group === undefined ? opts.y : d[opts.group];
+                                    })
+                                    .entries(data);
+                                    }
+                                    
+                                    if (opts.disabled != undefined){
+                                    data.map(function(d, i){
+                                    d.disabled = opts.disabled[i]
+                                    })
+                                    }
+                                    
+                                    nv.addGraph(function() {
+                                    var chart = nv.models[opts.type]()
+                                    .width(opts.width)
+                                    .height(opts.height)
+                                    
+                                    if (opts.type != 'bulletChart'){
+                                    chart
+                                    .x(function(d) { return d[opts.x] })
+                                    .y(function(d) { return d[opts.y] })
+                                    }
+                                    
+                                    
+                                    {{{ chart }}}
+                                    
+                                    {{{ xAxis }}}
+                                    
+                                    {{{ x2Axis }}}
+                                    
+                                    {{{ yAxis }}}
+                                    
+                                    d3.select('#' + opts.id)
+                                    .append('svg')
+                                    .datum(data)
+                                    .transition().duration(500)
+                                    .call(chart);
+                                    
+                                    nv.utils.windowResize(chart.update);
+                                    return chart;
+                                    },%s);
+                                    };
+                                    </script>
+                                    "
+                                    ,
+                                    #here is where you can type your labelling function
+                                    "
+                                    function(){
+                                    //for each circle or point that we have
+                                    // add a text label with information
+                                    d3.selectAll('.nv-group circle').each(function( ){
+                                    d3.select(d3.select(this).node().parentNode).append('text')
+                                    .datum( d3.select(this).data() )
+                                    .text( function(d) {
+                                    //you'll have access to data here so you can
+                                    //pick and choose
+                                    //as example just join all the info into one line
+                                    return Object.keys(d[0]).map(function( key ){
+                                    if(key=='Away'){
+                                      return( '   ' +  d[0][key] + ' vs ')
+                                    }
+                                    if(key=='Home'){
+                                      return( d[0][key])
+                                    }
+                            
+                                    }).join()
+                                    })
+                                    .attr('x',d3.select(this).attr('cx'))
+                                    .attr('y',d3.select(this).attr('cy'))
+                                    .style('pointer-events','none')
+                                    })
+                                    }
+                                    "
+    ))
+    
     return(p2)
     
   })
