@@ -55,13 +55,15 @@ shinyServer(function(input, output) {
   output$choose_team <- renderUI({
     # teams <- c("ALL")
     teams <- unique(players$Team)
-    selectizeInput("choose_team", "Teams: \n", choices = teams, selected = teams, multiple = TRUE)
+    selectizeInput("choose_team", "Filter by Teams: \n", choices = teams, selected = teams, multiple = TRUE)
   })
   
-  output$predicition_type <- renderUI({
-    type <- unique(players_barplot$Points.Type)
-    checkboxGroupInput("predicition_type","Select Prediction Type:",type,inline = TRUE)
+  output$salary_filter <- renderUI({
+    sliderInput("salary", "Filter by Salary:",
+                min = min(players$Salary), max = max(players$Salary), value = c(min(players$Salary),max(players$Salary)))
   })
+  
+  
   
   
   #***********Server side for players tab.*************
@@ -90,10 +92,13 @@ shinyServer(function(input, output) {
       p1$yAxis(axisLabel = "Points/Minute")
     }
     
+  
+    
     p1$addParams(height = 600, width = 1200, dom = 'chart1', title = "players")
     p1$chart(stacked = TRUE,margin = list(left=100, right = 70, bottom = 150), color = c('#ff353e','#ffb729','#519399'))
-    p1$xAxis(width = 300)
+    # p1$xAxis(width = 150)
     p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
+    p1$set(disabled = c(F,F,F))
     p1$chart(tooltipContent = "#! function(key, val, e, graph){
                 return '<h4>' + '<font color=black>'+ val +'</font>'+ '</h4>' + '<p>'+ key + ': ' + '<b>' + e + '</b>' } !#")
     # p1$xAxis(staggerLabels = TRUE)

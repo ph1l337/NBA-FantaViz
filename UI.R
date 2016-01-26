@@ -41,37 +41,39 @@ shinyUI(navbarPage("NBA FantaViz",
    tabPanel("Players",
             fluidPage(
               fluidRow(column(width=4,
-                              h3("Introduction"),
-                              helpText("Blaa")),
+                              
+                              h3("Attributes"),
+                              helpText("Choose the attributes on how you want to compare the players"),
+                              
+                              #          selectInput("day",
+                              #                      label = "Choose a game day",
+                              #                      choices = c("Points", "Points/Salary"),
+                              #                      selected = "Points"),
+                              radioButtons("player_attr",
+                                           label = "Choose an attribute",
+                                           choices = c("Points", "Points/Salary","Points/Minute"),
+                                           selected = "Points",
+                                           inline = T),
+                              helpText("You can select which projections are being displayed by clicking on the points.")),
+                          
+                            
                        column(width=4,
-                        h3("Attributes"),
-                        helpText("Choose the attributes on how you want to compare the players"),
-                        
-                       #          selectInput("day",
-                       #                      label = "Choose a game day",
-                       #                      choices = c("Points", "Points/Salary"),
-                       #                      selected = "Points"),
-                       selectInput("player_attr",
-                                   label = "Choose a variable",
-                                   choices = c("Points", "Points/Salary","Points/Minute"),
-                                   selected = "Points"),
-                       uiOutput("predicition_type")
+                              h3("Filters"),
+                              uiOutput("salary_filter")
+
                        ),
                        
                        column(width=4,
-                         h3("Filter"),
+                         br(),br(),br(),
 #                        selectInput("sorting",
 #                                    label="Sorty by",
 #                                    choices = c("Projected","Floor","Ceiling"),
 #                                    selected = "Projected"
 #                                    ),
-                       
-                        sliderInput("salary", "Salary:",
-                                   min = 0, max = 15000, value = c(0,15000)),
                         uiOutput("choose_team"),
-                        helpText("Hint: you can deselect several teams by clicking on one and clicking on another while holding shift.")
+                        helpText("Hint: you can deselect several teams by clicking on one and clicking on another while holding shift."),
+                br(),br()
                          ),
-                        column(width=4)),
               fluidRow(
                br(),br(),
                helpText("Note: Names of the players will apear when less than 50 are displayed or when hovering the mouse over the bar",align="center"),
@@ -88,7 +90,7 @@ shinyUI(navbarPage("NBA FantaViz",
               #            DT::dataTableOutput('tab1')
               #     )
               #   )
-            ),
+            )),
    
     #********* GAMES TAB ****************
     tabPanel("Games",
