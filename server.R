@@ -70,7 +70,8 @@ shinyServer(function(input, output) {
     #inFile2 <- input$file2
     
     if (is.null(inFile))
-      return(NULL)
+      players ->> out
+      return(out)
     
     players <- read.csv(inFile$datapath, header = input$header,
             sep = input$sep, quote = input$quote, stringsAsFactors=FALSE)
@@ -98,7 +99,9 @@ shinyServer(function(input, output) {
     players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*1000)
     players_barplot <- transform(players_barplot, Points.Minute = (Points/Minutes.Average))
     players_barplot <<- players_barplot
-    return(players)
+    players <<- players
+    players ->> out
+    return(out)
     
   })
   
