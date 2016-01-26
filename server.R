@@ -6,6 +6,7 @@ library(shinyjs)
 #****Requires*******
 require(rCharts)
 #****Sources********
+source("generalUtils.r", local=TRUE)
 #Nothing yet.
 
 #***Related to File upload Tab.
@@ -15,12 +16,12 @@ options(shiny.maxRequestSize = 9*1024^2) #File Upload Max Size (9MB now)
 options(RCHART_WIDTH = 800)
 
 #Will be connected later with FileUpload
-gameday <- read.csv("data/gamedayOption2.csv")
-gamedayTable <- read.csv("data/gamedayTable.csv")
-gameday101 <- read.csv("data/gameday101.csv")
-gamedayTableZone <- read.csv("data/gamedayTableZone.csv")
+
+gameday <- dplyr::tbl_df(data.table(read.csv("data/gameday.csv",stringsAsFactors=FALSE))) #Original gameday dataset submitted.
+gameday101 <- read.csv("data/gameday101.csv")  #Processed, used for 101 graph.
+#gamedayTableZone <- read.csv("data/gamedayTable.csv") #Processed used for Scatterplot.
+
 players <- dplyr::tbl_df(data.table(read.csv("data/players.csv",stringsAsFactors=FALSE)))
-# players_barplot<- read.csv("data/players_barplot.csv", sep=";")
 
 
 #creating data.frame for barplot
@@ -35,6 +36,26 @@ players <- dplyr::tbl_df(data.table(read.csv("data/players.csv",stringsAsFactors
                               stringsAsFactors=FALSE
                               )))
 
+  #creating data.frame for gamedayTable
+  gamedayTable<-dplyr::tbl_df(data.table(data.frame(Away = character(),
+                                                       Home = character(),
+                                                       Away.Score = double(),
+                                                       Home.Score = double(),
+                                                       stringsAsFactors=FALSE
+                              )))
+
+  #creating data.frame for gamedayTableZone
+  gamedayTableZone<-dplyr::tbl_df(data.table(data.frame(Away = character(),
+                                                    Home = character(),
+                                                    Away.Score = double(),
+                                                    Home.Score = double(),
+                                                    Total.Points=double(),
+                                                    Difference=double(),
+                                                    Game.Ranking=double(),
+                                                    stringsAsFactors=FALSE
+  )))
+
+  #Processing players dataset
 for(i in 1:nrow(players)){
   players_barplot[(i*3)-2,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Floor",players$Floor.Points[i])
   players_barplot[(i*3)-1,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Projected",players$Projected.Points[i])
@@ -47,9 +68,39 @@ players_barplot$Salary<- as.numeric(players_barplot$Salary)
 players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*1000)
 players_barplot <- transform(players_barplot, Points.Minute = (Points/Minutes.Average))
 
+#Processing gamedayTable dataset
+for(i in 1:nrow(gameday)){
+  gamedayTable[i,] <- c(gameday$Away[i],gameday$Home[i],gameday$Away.Score[i],gameday$Home.Score[i])
+}
+
+gamedayTable$Away.Score <- as.numeric(gamedayTable$Away.Score)
+gamedayTable$Home.Score <- as.numeric(gamedayTable$Home.Score)
 
 
-shinyServer(function(input, output) {
+gamedayTable <- transform(gamedayTable, Total.Points = (Home.Score+Away.Score))
+gamedayTable <- transform(gamedayTable, Difference = abs((Home.Score-Away.Score)))
+gamedayTable <- transform(gamedayTable, Game.Ranking = gameRanking(Home.Score,Away.Score))
+
+#Processing gamedayTableZone
+for(i in 1:nrow(gameday)){
+  gamedayTableZone[i,] <- c(gamedayTable$Away[i],gamedayTable$Home[i],gamedayTable$Away.Score[i],gamedayTable$Home.Score[i],gamedayTable$Total.Points[i],
+                            gamedayTable$Difference[i], gamedayTable$Game.Ranking[i])
+}
+
+GameZ <<- "Cold"
+Game.Zone.Column = sapply(gamedayTable$Game.Ranking, function(x) {
+  if(x<2) GameZ = "Very Cold"
+  if(x>8) GameZ = "Very Hot"
+  if(x<8 && x>7) GameZ = "Hot"
+  if(x<7 && x>4) GameZ = "Medium"
+  if(x<5 && x>2) GameZ = "Cold"
+  print(GameZ)
+  return(GameZ)
+})
+gamedayTableZone["Game.Zone"] <- Game.Zone.Column
+
+  #********SERVER FUNCTION ************
+  shinyServer(function(input,output){
 
 
   #***********Dynamic UI elements*************
@@ -135,7 +186,7 @@ shinyServer(function(input, output) {
   #*************Reload Demo Data ************#
 
   observeEvent(input$reset,{
-    gameday <<- read.csv("data/gamedayOption2.csv")
+    # gameday <<- read.csv("data/gamedayOption2.csv")
     gamedayTable <<- read.csv("data/gamedayTable.csv")
     gameday101 <<- read.csv("data/gameday101.csv")
     gamedayTableZone <<- read.csv("data/gamedayTableZone.csv")
@@ -206,7 +257,6 @@ shinyServer(function(input, output) {
     p1$chart(stacked = TRUE,margin = list(left=100, right = 70, bottom = 150), color = c('#ff353e','#ffb729','#519399'))
     # p1$xAxis(width = 150)
     p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
-    p1$set(disabled = c(F,F,F))
     p1$chart(tooltipContent = "#! function(key, val, e, graph){
                 return '<h4>' + '<font color=black>'+ val +'</font>'+ '</h4>' + '<p>'+ key + ': ' + '<b>' + e + '</b>' } !#")
     # p1$xAxis(staggerLabels = TRUE)
@@ -344,6 +394,7 @@ shinyServer(function(input, output) {
                                     //for each circle or point that we have
                                     // add a text label with information
                                     d3.selectAll('.nv-group circle').each(function( ){
+
                                     d3.select(d3.select(this).node().parentNode).append('text')
                                     .datum( d3.select(this).data() )
                                     .text( function(d) {
@@ -366,11 +417,13 @@ shinyServer(function(input, output) {
                                     })
                                     }
                                     "
+
     ))
 
     return(p2)
 
   })
+
 
 
 
