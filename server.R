@@ -101,14 +101,75 @@ gamedayTableZone["Game.Zone"] <- Game.Zone.Column
   #***********Dynamic UI elements*************
   output$choose_team <- renderUI({
     # teams <- c("ALL")
-    teams <- unique(players$Team)
-    selectizeInput("choose_team", "Teams: \n", choices = teams, selected = teams, multiple = TRUE)
+    teams <- unique(players_barplot$Team)
+    selectizeInput("choose_team", "Filter by Teams: \n", choices = teams, selected = teams, multiple = TRUE)
   })
   
-  output$predicition_type <- renderUI({
-    type <- unique(players_barplot$Points.Type)
-    checkboxGroupInput("predicition_type","Select Prediction Type:",type,inline = TRUE)
+  output$salary_filter <- renderUI({
+    sliderInput("salary", "Filter by Salary:",
+                min = min(players_barplot$Salary), max = max(players_barplot$Salary), value = c(min(players_barplot$Salary),max(players_barplot$Salary)))
   })
+  
+  
+  #**********Server side for file upload tab.*********
+  output$contents1 <- renderTable({
+    inFile <- input$file1
+    #inFile2 <- input$file2
+    
+    if (is.null(inFile))
+      players ->> out
+      return(out)
+    
+    players <- read.csv(inFile$datapath, header = input$header,
+            sep = input$sep, quote = input$quote, stringsAsFactors=FALSE)
+    #creating data.frame for barplot
+    players_barplot<-dplyr::tbl_df(data.table(data.frame(Position = character(),
+                                                         Name = character(),
+                                                         Salary = integer(),
+                                                         Team = character(),
+                                                         vsTeam = character(),
+                                                         Minutes.Average = double(),
+                                                         Points.Type = character(),
+                                                         Points = double(),
+                                                         stringsAsFactors=FALSE
+    )))
+    
+    for(i in 1:nrow(players)){
+      players_barplot[(i*3)-2,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Floor",players$Floor.Points[i])
+      players_barplot[(i*3)-1,] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Projected",players$Projected.Points[i])
+      players_barplot[(i*3),] <- c(players$Position[i],players$Name[i],players$Salary[i],players$Team[i],players$vsTeam[i],players$Minutes.Average[i],"Ceiling",players$Ceiling.Points[i])
+    }
+    players_barplot$Points <- as.numeric(players_barplot$Points)
+    players_barplot$Minutes.Average <- as.numeric(players_barplot$Minutes.Average)
+    players_barplot$Salary<- as.numeric(players_barplot$Salary)
+    
+    players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*1000)
+    players_barplot <- transform(players_barplot, Points.Minute = (Points/Minutes.Average))
+    players_barplot <<- players_barplot
+    players <<- players
+    players ->> out
+    return(out)
+    
+  })
+  
+  
+  output$contents2 <- renderTable({
+    inFile <- input$file2
+    #inFile2 <- input$file2
+    
+    if (is.null(inFile))
+      return(NULL)
+    
+    gameday <- read.csv(inFile$datapath, header = input$header,
+                        sep = input$sep, quote = input$quote, stringsAsFactors=FALSE)
+    gameday <<- gameday
+    
+    return(gameday)
+    
+  })
+  
+  
+  #*****Transformation of data  *******#####
   
   
   #***********Server side for players tab.*************
@@ -137,10 +198,13 @@ gamedayTableZone["Game.Zone"] <- Game.Zone.Column
       p1$yAxis(axisLabel = "Points/Minute")
     }
     
+  
+    
     p1$addParams(height = 600, width = 1200, dom = 'chart1', title = "players")
     p1$chart(stacked = TRUE,margin = list(left=100, right = 70, bottom = 150), color = c('#ff353e','#ffb729','#519399'))
-    p1$xAxis(width = 300)
+    # p1$xAxis(width = 150)
     p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
+    p1$set(disabled = c(F,F,F))
     p1$chart(tooltipContent = "#! function(key, val, e, graph){
                 return '<h4>' + '<font color=black>'+ val +'</font>'+ '</h4>' + '<p>'+ key + ': ' + '<b>' + e + '</b>' } !#")
     # p1$xAxis(staggerLabels = TRUE)
@@ -164,18 +228,7 @@ gamedayTableZone["Game.Zone"] <- Game.Zone.Column
     DT::datatable(players.tableData,options =list(paging = FALSE))
   })
   
-  #**********Server side for file upload tab.*********
-  output$contents <- renderTable({
-    inFile <- input$file1
-    #inFile2 <- input$file2
-    
-    if (is.null(inFile))
-      return(NULL)
-    
-    #read.csv(inFile$datapath, header = input$header,
-    #         sep = input$sep, quote = input$quote)
-    read.csv(inFile$datapath)
-  })
+ 
   
   #********* Server side for games ******************
   # Table View
