@@ -99,6 +99,7 @@ shinyUI(navbarPage("NBA FantaViz",
                ),
                
                fluidRow(
+                 br(),br(), br(),br(),
                  h3("Teams Over/Under media", align="center"),
                  rCharts::showOutput("games1","nvd3") 
                ),
