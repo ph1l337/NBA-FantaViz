@@ -122,7 +122,7 @@ shinyServer(function(input, output) {
   #********* Server side for games ******************
   # Table View
   output$summary <- DT::renderDataTable(
-    DT::datatable(gamedayTable, options = list(paging = FALSE, searching=FALSE, autoWidth = TRUE,
+    DT::datatable(gamedayTable, options = list(dom='t', autoWidth = TRUE,
                                           columnDefs = list(list(width = '80px', targets = "_all"))))
   )
   
