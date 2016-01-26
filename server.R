@@ -44,6 +44,7 @@ players_barplot$Minutes.Average <- as.numeric(players_barplot$Minutes.Average)
 players_barplot$Salary<- as.numeric(players_barplot$Salary)
 
 players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*1000)
+players_barplot <- transform(players_barplot, Points.Minute = (Points/Minutes.Average))
 
 
 
@@ -52,9 +53,14 @@ shinyServer(function(input, output) {
   
   #***********Dynamic UI elements*************
   output$choose_team <- renderUI({
-    teams <- c("ALL")
-    teams <- c(teams,unique(players$Team))
-    selectInput("choose_team", "Team:", teams)
+    # teams <- c("ALL")
+    teams <- unique(players$Team)
+    selectizeInput("choose_team", "Teams: \n", choices = teams, selected = teams, multiple = TRUE)
+  })
+  
+  output$predicition_type <- renderUI({
+    type <- unique(players_barplot$Points.Type)
+    checkboxGroupInput("predicition_type","Select Prediction Type:",type,inline = TRUE)
   })
   
   
@@ -62,9 +68,8 @@ shinyServer(function(input, output) {
   output$chart1 <- renderChart({
     
     players.toPlot <- dplyr::filter(players_barplot, (Salary >= input$salary[1]) , (Salary <= input$salary[2]))
-    if(input$choose_team != "ALL"){
-    players.toPlot <- dplyr::filter(players_barplot, (Team == input$choose_team))  
-    }
+    players.toPlot <- dplyr::filter(players.toPlot, (Team %in% input$choose_team))  
+    
    
 #     players.toPlot <- dplyr::arrange(players.toPlot, Points)
 
@@ -80,11 +85,17 @@ shinyServer(function(input, output) {
      
     }
     
-    p1$addParams(height = 400, width = 1200, dom = 'chart1', title = "players")
+    if(input$player_attr=="Points/Minute"){
+      p1 <- nPlot(Points.Salary ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarChart")
+      p1$yAxis(axisLabel = "Points/Minute")
+    }
+    
+    p1$addParams(height = 600, width = 1200, dom = 'chart1', title = "players")
     p1$chart(stacked = TRUE,margin = list(left=100, right = 70, bottom = 150), color = c('#ff353e','#ffb729','#519399'))
     p1$xAxis(width = 300)
     p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
-   
+    p1$chart(tooltipContent = "#! function(key, val, e, graph){
+                return '<h4>' + '<font color=black>'+ val +'</font>'+ '</h4>' + '<p>'+ key + ': ' + '<b>' + e + '</b>' } !#")
     # p1$xAxis(staggerLabels = TRUE)
     
     #50

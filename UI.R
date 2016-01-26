@@ -53,9 +53,11 @@ shinyUI(navbarPage("NBA FantaViz",
                        #                      selected = "Points"),
                        selectInput("player_attr",
                                    label = "Choose a variable",
-                                   choices = c("Points", "Points/Salary"),
-                                   selected = "Points")
+                                   choices = c("Points", "Points/Salary","Points/Minute"),
+                                   selected = "Points"),
+                       uiOutput("predicition_type")
                        ),
+                       
                        column(width=4,
                          h3("Filter"),
 #                        selectInput("sorting",
@@ -66,16 +68,18 @@ shinyUI(navbarPage("NBA FantaViz",
                        
                         sliderInput("salary", "Salary:",
                                    min = 0, max = 15000, value = c(0,15000)),
-                        uiOutput("choose_team")
+                        uiOutput("choose_team"),
+                        helpText("Hint: you can deselect several teams by clicking on one and clicking on another while holding shift.")
                          ),
                         column(width=4)),
               fluidRow(
-                br(),br(),br(),
-                helpText("Note: Names of the players will apear when less than 50 are displayed or when hovering the mouse over the bar",align="center"),
-                br(),br(),br(),br(),br()),
-              fluidRow(
+               br(),br(),
+               helpText("Note: Names of the players will apear when less than 50 are displayed or when hovering the mouse over the bar",align="center"),
+               br()),
+              fluidRow(column(12,
               
                        rCharts::showOutput("chart1","nvd3")
+                  )
                 )
               )
               #,
