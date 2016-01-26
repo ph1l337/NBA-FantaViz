@@ -128,13 +128,13 @@ shinyServer(function(input, output) {
   #********* Server side for games ******************
   # Table View
   output$summary <- DT::renderDataTable(
-    DT::datatable(gamedayTable, options = list(paging = FALSE, searching=FALSE, autoWidth = TRUE,
+    DT::datatable(gamedayTable, options = list(dom='t', autoWidth = TRUE,
                                           columnDefs = list(list(width = '80px', targets = "_all"))))
   )
   
   # 101 View
   output$games1 <- renderChart({ 
-    gameday101$Game.Quantity <- factor(gameday101$Game.Quantity, levels = c("High Score", "Average Score", "Low Score"), ordered = TRUE) # re-order the factors
+    gameday101$Game.Quantity <- factor(gameday101$Game.Quantity, levels = c("Low Score", "Average Score", "High Score"), ordered = TRUE) # re-order the factors
     gameday101 <- gameday101[order(gameday101$Game.Quantity), ] # re-order the variables
     
       p2 <- nPlot(Points ~ Team, data = gameday101, group='Game.Quantity', type = 'multiBarChart')
@@ -142,6 +142,7 @@ shinyServer(function(input, output) {
       p2$xAxis(axisLabel = "Teams")
       p2$addParams(height = 300, dom = 'games1', title = "games" )
       p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 0))
+      p2$chart(color = c('#5882FA', '#F7BE81', '#FF0000'))
       p2$chart(reduceXTicks = FALSE)
       p2$xAxis(staggerLabels = TRUE)
       
@@ -153,7 +154,7 @@ shinyServer(function(input, output) {
   
   # Closeness View
   output$games2 <- renderChart2({ 
-    gamedayTableZone$Game.Zone <- factor(gamedayTableZone$Game.Zone, levels = c("Very Hot", "Hot", "Medium", "Cold", "Very Cold"), ordered = TRUE) # re-order the factors
+    gamedayTableZone$Game.Zone <- factor(gamedayTableZone$Game.Zone, levels = c("Very Cold", "Cold", "Medium", "Hot", "Very Hot"), ordered = TRUE) # re-order the factors
     gamedayTableZone <- gamedayTableZone[order(gamedayTableZone$Game.Zone), ] # re-order the variables
     
     p2 <- nPlot(Total.Points ~ Difference, data = gamedayTableZone, group='Game.Zone',type = 'scatterChart') 
@@ -163,9 +164,14 @@ shinyServer(function(input, output) {
     p2$chart(sizeRange = c(300,300))
     p2$chart(showControls = FALSE)
     p2$chart( xDomain = sort(range(gamedayTableZone$Difference),decreasing=T) )
+    p2$chart(color = c('#0404B4', '#5882FA', '#F7BE81', '#FF8000', '#FF0000'))
     #p2$addParams(height = 300, dom = 'games1', title = "games" )
     #p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 100))
     #options(RCHART_WIDTH = 400)
+    p2$chart(tooltipContent = "#! function(key, x, y, e ){ 
+      var d = e.series.values[e.pointIndex];
+      return ' Game: ' + d.Home + ' vs ' + d.Away
+} !#")
     return(p2)
     
   })
