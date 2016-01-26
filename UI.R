@@ -1,5 +1,5 @@
 #*****Libraries*****
-#Nothing yet.
+library(shinyjs)
 #****Requires*******
 require(rCharts)
 #****Sources********
@@ -10,6 +10,8 @@ options(RCHART_LIB = 'polycharts')
 shinyUI(
   
   fluidPage(
+    shinyjs::useShinyjs(),
+    shinyjs::extendShinyjs(text = "shinyjs.refresh = function() { location.reload(); }"),
     list(tags$head(HTML('<link rel="icon", href="MyIcon.png", 
                         type="image/png" />'))),
     div(style="padding: 0px 0px; width: '100%'",
@@ -62,10 +64,12 @@ shinyUI(
                      a(href = 'mtcars.csv', 'mtcars.csv'), 'or',
                      a(href = 'pressure.tsv', 'pressure.tsv'),
                      'files, and then try uploading them.'
-                   )
+                   ),
+                   tags$hr(),
+                   actionButton("reset", "Reload Demo Data")
                  ),
                  mainPanel(
-                  helpText("Check the data you uploaded. Click on refresh to update the UI to your data."),
+                  helpText("Here you can see the data loaded into the application."),
                    tabsetPanel(
                      tabPanel("players",
                       tableOutput('contents1')),
