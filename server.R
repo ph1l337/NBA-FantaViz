@@ -128,7 +128,7 @@ shinyServer(function(input, output) {
   
   # 101 View
   output$games1 <- renderChart({ 
-    gameday101$Game.Quantity <- factor(gameday101$Game.Quantity, levels = c("High Score", "Average Score", "Low Score"), ordered = TRUE) # re-order the factors
+    gameday101$Game.Quantity <- factor(gameday101$Game.Quantity, levels = c("Low Score", "Average Score", "High Score"), ordered = TRUE) # re-order the factors
     gameday101 <- gameday101[order(gameday101$Game.Quantity), ] # re-order the variables
     
       p2 <- nPlot(Points ~ Team, data = gameday101, group='Game.Quantity', type = 'multiBarChart')
@@ -147,7 +147,7 @@ shinyServer(function(input, output) {
   
   # Closeness View
   output$games2 <- renderChart2({ 
-    gamedayTableZone$Game.Zone <- factor(gamedayTableZone$Game.Zone, levels = c("Very Hot", "Hot", "Medium", "Cold", "Very Cold"), ordered = TRUE) # re-order the factors
+    gamedayTableZone$Game.Zone <- factor(gamedayTableZone$Game.Zone, levels = c("Very Cold", "Cold", "Medium", "Hot", "Very Hot"), ordered = TRUE) # re-order the factors
     gamedayTableZone <- gamedayTableZone[order(gamedayTableZone$Game.Zone), ] # re-order the variables
     
     p2 <- nPlot(Total.Points ~ Difference, data = gamedayTableZone, group='Game.Zone',type = 'scatterChart') 
