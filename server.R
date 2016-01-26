@@ -136,6 +136,7 @@ shinyServer(function(input, output) {
       p2$xAxis(axisLabel = "Teams")
       p2$addParams(height = 300, dom = 'games1', title = "games" )
       p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 0))
+      p2$chart(color = c('#5882FA', '#F7BE81', '#FF0000'))
       p2$chart(reduceXTicks = FALSE)
       p2$xAxis(staggerLabels = TRUE)
       
@@ -157,6 +158,7 @@ shinyServer(function(input, output) {
     p2$chart(sizeRange = c(300,300))
     p2$chart(showControls = FALSE)
     p2$chart( xDomain = sort(range(gamedayTableZone$Difference),decreasing=T) )
+    p2$chart(color = c('#0404B4', '#5882FA', '#F7BE81', '#FF8000', '#FF0000'))
     #p2$addParams(height = 300, dom = 'games1', title = "games" )
     #p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 100))
     #options(RCHART_WIDTH = 400)
