@@ -81,7 +81,7 @@ shinyServer(function(input, output) {
     }
     
     p1$addParams(height = 400, width = 1200, dom = 'chart1', title = "players")
-    p1$chart(stacked = TRUE,margin = list(left=100, right = 70, bottom = 150), color = c('#ffb729','#ff353e','#519399'))
+    p1$chart(stacked = TRUE,margin = list(left=100, right = 70, bottom = 150), color = c('#ff353e','#ffb729','#519399'))
     p1$xAxis(width = 300)
     p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
    
