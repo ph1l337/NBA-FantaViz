@@ -145,11 +145,13 @@ shinyUI(
                fluidRow(
                  br(),br(), br(),br(),
                  h3("Teams Over/Under compared to Median", align="center"),
+                 helpText("The average points scored by a team in a game is 101. This plot shows the difference against that median", align="center"),
                  rCharts::showOutput("games1","nvd3") 
                ),
                
                fluidRow(
                  h3("Closeness Ranking vs Total Points ", align="center"),
+                 helpText("This plot shows total expected points in a game against how close a game is expected to be", align="center"),
                  rCharts::showOutput("games2","nvd3") 
                )
             )
