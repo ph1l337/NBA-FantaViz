@@ -241,28 +241,21 @@ shinyServer(function(input, output) {
                                     //for each circle or point that we have
                                     // add a text label with information
                                     d3.selectAll('.nv-group circle').each(function( ){
-                                    d3.select(d3.select(this).node().parentNode).append('text')
-                                    .datum( d3.select(this).data() )
-                                    .text( function(d) {
-                                    //you'll have access to data here so you can
-                                    //pick and choose
-                                    //as example just join all the info into one line
-                                    return Object.keys(d[0]).map(function( key ){
-                                    if(key=='Away'){
-                                      return( '   ' +  d[0][key] + ' vs ')
-                                    }
-                                    if(key=='Home'){
-                                      return( d[0][key])
-                                    }
+                                        d3.select(d3.select(this).node().parentNode).append('text').datum( d3.select(this).data() ).text( function(d) {
+                                          //you'll have access to data here so you can
+                                          //pick and choose
+                                          //as example just join all the info into one line
+                                          return Object.keys(d[0]).map(function( key ){
+                                                if(key=='Away'){
+                                                  return( '   ' +  d[0][key] + ' vs ')
+                                                }
+                                                if(key=='Home'){
+                                                  return( d[0][key])
+                                                }
                             
-                                    }).join()
-                                    })
-                                    .attr('x',d3.select(this).attr('cx'))
-                                    .attr('y',d3.select(this).attr('cy'))
-                                    .style('pointer-events','none')
-                                    })
-                                    }
-                                    "
+                                              }).join()
+                                    }).attr('x',d3.select(this).attr('cx')).attr('y',d3.select(this).attr('cy')).style('pointer-events','none')})
+                                    }"
     ))
     
     return(p2)
