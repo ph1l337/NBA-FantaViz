@@ -144,7 +144,7 @@ shinyUI(
                
                fluidRow(
                  br(),br(), br(),br(),
-                 h3("Teams Over/Under media", align="center"),
+                 h3("Teams over/under Median", align="center"),
                  rCharts::showOutput("games1","nvd3") 
                ),
                
