@@ -89,17 +89,21 @@ shinyUI(navbarPage("NBA FantaViz",
     #********* GAMES TAB ****************
     tabPanel("Games",
              fluidPage(
-               mainPanel(
-                 h4("Daily Information"),
-                 div(DT::dataTableOutput("summary"), style = "font-size:90%"),
-                 
-                 h4("Teams Over/Under media"),
-                 rCharts::showOutput("games1","nvd3"), 
-                 
-                 h4("Closeness Ranking vs Total Points "),
+               fluidRow(
+                 h3("Daily Information", align="center"),
+                 div(DT::dataTableOutput("summary"), style = "font-size:90%")
+               ),
+               
+               fluidRow(
+                 h3("Teams Over/Under media", align="center"),
+                 rCharts::showOutput("games1","nvd3") 
+               ),
+               
+               fluidRow(
+                 h3("Closeness Ranking vs Total Points ", align="center"),
                  rCharts::showOutput("games2","nvd3") 
                )
-             )
+            )
       ),
       #********* About TAB ****************
       tabPanel("About",
