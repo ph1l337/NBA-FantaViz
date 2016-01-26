@@ -162,6 +162,10 @@ shinyServer(function(input, output) {
     #p2$addParams(height = 300, dom = 'games1', title = "games" )
     #p2$chart(showControls=FALSE, margin = list(left=100, right = 70, bottom = 100))
     #options(RCHART_WIDTH = 400)
+    p2$chart(tooltipContent = "#! function(key, x, y, e ){ 
+      var d = e.series.values[e.pointIndex];
+      return ' Game: ' + d.Home + ' vs ' + d.Away
+} !#")
     return(p2)
     
   })
