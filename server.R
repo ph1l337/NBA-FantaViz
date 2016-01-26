@@ -16,7 +16,7 @@ options(RCHART_WIDTH = 800)
 
 #Will be connected later with FileUpload
 gameday <- dplyr::tbl_df(data.table(read.csv("data/gameday.csv",stringsAsFactors=FALSE))) #Original gameday dataset submitted.
-gameday101 <- read.csv("data/gameday101.csv")  #Processed, used for 101 graph.
+#gameday101 <- read.csv("data/gameday101.csv")  #Processed, used for 101 graph.
 #gamedayTableZone <- read.csv("data/gamedayTable.csv") #Processed used for Scatterplot.
 players <- dplyr::tbl_df(data.table(read.csv("data/players.csv",stringsAsFactors=FALSE)))
 
@@ -51,6 +51,12 @@ players <- dplyr::tbl_df(data.table(read.csv("data/players.csv",stringsAsFactors
                                                     Game.Ranking=double(),
                                                     stringsAsFactors=FALSE
   )))
+  
+  #creating data.frame for gameday101
+  gameday101<-dplyr::tbl_df(data.table(data.frame(Team = character(),
+                                                  Score = double(),
+                                                  stringsAsFactors=FALSE
+  )))
 
   #Processing players dataset
 for(i in 1:nrow(players)){
@@ -65,7 +71,7 @@ players_barplot$Salary<- as.numeric(players_barplot$Salary)
 players_barplot <- transform(players_barplot, Points.Salary = (Points/Salary)*1000)
 players_barplot <- transform(players_barplot, Points.Minute = (Points/Minutes.Average))
 
-#Processing gamedayTable dataset
+#Processing gamedayTable 
 for(i in 1:nrow(gameday)){
   gamedayTable[i,] <- c(gameday$Away[i],gameday$Home[i],gameday$Away.Score[i],gameday$Home.Score[i])
 }
@@ -90,10 +96,27 @@ Game.Zone.Column = sapply(gamedayTable$Game.Ranking, function(x) {
   if(x<8 && x>7) GameZ = "Hot"
   if(x<7 && x>4) GameZ = "Medium"
   if(x<5 && x>2) GameZ = "Cold"
-  print(GameZ)
   return(GameZ)
 })
 gamedayTableZone["Game.Zone"] <- Game.Zone.Column
+
+#Processing gameday101
+for(i in 1:nrow(gameday)){
+  gameday101[(i*2)-1,] <- c(gameday$Away[i], gameday$Away.Score[i])
+  gameday101[(i*2),] <- c(gameday$Home[i], gameday$Home.Score[i])
+}
+gameday101$Score <- as.numeric(gameday101$Score)
+
+gameday101<- transform(gameday101, Points = (Score-101))
+
+GameQ <<- "Low Score"
+Game.Quantity.Column = sapply(gameday101$Points, function(x) {
+  if(x < 4 && x > -4) GameQ = "Average Score"
+  if(x > 3) GameQ = "High Score"
+  if(x < -3) GameQ = "Low Score"
+  return(GameQ)
+})
+gameday101["Game.Quantity"] <- Game.Quantity.Column
 
   #********SERVER FUNCTION ************
   shinyServer(function(input,output){
