@@ -70,7 +70,7 @@ shinyUI(
                    actionButton("reset", "Reload Demo Data")
                  ),
                  mainPanel(
-                  helpText("Here you can see the data loaded into the application."),
+                  h3("The following data is currently loaded in the application:"),
                    tabsetPanel(
                      tabPanel("players",
                       tableOutput('contents1')),
