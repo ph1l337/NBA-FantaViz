@@ -116,7 +116,8 @@ shinyUI(
 #                                    choices = c("Projected","Floor","Ceiling"),
 #                                    selected = "Projected"
 #                                    ),
-                        uiOutput("choose_team"),
+                        uiOutput("team_filter"),
+                        uiOutput("position_filter"),
                         helpText("Hint: you can deselect several teams by clicking on one and clicking on another while holding shift.")
                
                          ),

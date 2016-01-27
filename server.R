@@ -127,15 +127,21 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
 
 
   #***********Dynamic UI elements*************
-  output$choose_team <- renderUI({
+  output$team_filter <- renderUI({
     # teams <- c("ALL")
     teams <- unique(players_barplot$Team)
-    selectizeInput("choose_team", "Filter by Teams: \n", choices = teams, selected = teams, multiple = TRUE)
+    selectizeInput("team_filter", "Filter by Teams: \n", choices = teams, selected = teams, multiple = TRUE)
   })
 
   output$salary_filter <- renderUI({
     sliderInput("salary", "Filter by Salary:",
                 min = min(players_barplot$Salary), max = max(players_barplot$Salary), value = c(min(players_barplot$Salary),max(players_barplot$Salary)))
+  })
+  
+  output$position_filter <- renderUI({
+    # teams <- c("ALL")
+    positions <- unique(players_barplot$Position)
+    selectizeInput("position_filter", "Filter by Position: \n", choices = positions, selected = positions, multiple = TRUE)
   })
 
 
@@ -435,7 +441,8 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
   output$chart1 <- renderChart({
 
     players.toPlot <- dplyr::filter(players_barplot, (Salary >= input$salary[1]) , (Salary <= input$salary[2]))
-    players.toPlot <- dplyr::filter(players.toPlot, (Team %in% input$choose_team))
+    players.toPlot <- dplyr::filter(players.toPlot, (Team %in% input$team_filter))
+    players.toPlot <- dplyr::filter(players.toPlot, (Position %in% input$position_filter))
 
 
 #     players.toPlot <- dplyr::arrange(players.toPlot, Points)
