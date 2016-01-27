@@ -390,9 +390,9 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
     
     GameZ <<- "Cold"
     Game.Zone.Column = sapply(gamedayTable$Game.Ranking, function(x) {
-      if(x<2) GameZ = "Very Cold"
+      if(x<3) GameZ = "Very Cold"
       if(x>8) GameZ = "Very Hot"
-      if(x<8 && x>7) GameZ = "Hot"
+      if(x<9 && x>6) GameZ = "Hot"
       if(x<7 && x>4) GameZ = "Medium"
       if(x<5 && x>2) GameZ = "Cold"
       return(GameZ)
@@ -609,7 +609,7 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
                                     //as example just join all the info into one line
                                     return Object.keys(d[0]).map(function( key ){
                                     if(key=='Away'){
-                                      return( '----->'+d[0][key] + ' vs ')
+                                      return( '-----'+d[0][key] + ' vs ')
                                     }
                                     if(key=='Home'){
                                       return( d[0][key])
