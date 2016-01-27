@@ -152,8 +152,8 @@ shinyUI(
                fluidRow(
                  br(),br(), br(),br(),
 
-                 h3("Teams Over/Under compared to Median", align="center"),
-                 helpText("The average points scored by a team in a game is 101. This plot shows the difference against that median", align="center"),
+                 h3("Teams Over/Under compared to Average", align="center"),
+                 helpText("The average points scored by a team in a game is 101. This plot shows the difference against that score", align="center"),
 
                  rCharts::showOutput("games1","nvd3")
                ),
