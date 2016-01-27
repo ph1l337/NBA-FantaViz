@@ -2,6 +2,7 @@
 library(shinyjs)
 #****Requires*******
 require(rCharts)
+library(V8)
 #****Sources********
 #Nothing yet.
 
@@ -26,6 +27,7 @@ shinyUI(
       tabPanel("Input",
                sidebarLayout(
                  sidebarPanel(
+                   helpText("Upload your data or explore the application with the demo data already loaded."),
                    fileInput('file1', 'Upload players file',
                              accept = c(
                                'text/csv',
@@ -60,9 +62,11 @@ shinyUI(
                                 '"'),
                    tags$hr(),
 
-                   p('You can use the templates for players and games:',
+                   p('You can use the templates for players and games:', 
                     a(href = 'resources/playersTemplate.csv', 'playersTemplate.csv'), ',',
                     a(href = 'resources/gamedayTemplate.csv', 'gamedayTemplate.csv')),
+                   p('The required data can for example be found at:',
+                    a(href = 'https://www.Rotogrinders.com', 'www.Rotogrinders.com')),
 
 
 
@@ -169,7 +173,7 @@ shinyUI(
       tabPanel("About",
          fluidPage(
            fluidRow(
-             h4("NBA FantaViz was created as part of a project at Technical University of Madrid by:",align="center"),
+             h4("NBA FantaViz was created during a project in the subject Big Data at Technical University of Madrid by:",align="center"),
             br(),br(),br(),br(),br(),br()
            ),
            fluidRow(

@@ -3,6 +3,7 @@ library(shiny)
 library(dplyr)
 library(data.table)
 library(shinyjs)
+library(V8)
 #****Requires*******
 require(rCharts)
 #****Sources********
