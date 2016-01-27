@@ -191,13 +191,102 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
     if (is.null(inFile))
       return(gameday)
 
-    gameday <- read.csv(inFile$datapath, header = input$header,
-                        sep = input$sep, quote = input$quote, stringsAsFactors=FALSE)
+    gameday <- dplyr::tbl_df(read.csv(inFile$datapath, header = input$header,
+                        sep = input$sep, quote = input$quote, stringsAsFactors=FALSE))
+    
+    #creating data.frame for barplot
+    players_barplot<-dplyr::tbl_df(data.table(data.frame(Position = character(),
+                                                         Name = character(),
+                                                         Salary = integer(),
+                                                         Team = character(),
+                                                         vsTeam = character(),
+                                                         Minutes.Average = double(),
+                                                         Points.Type = character(),
+                                                         Points = double(),
+                                                         stringsAsFactors=FALSE
+    )))
+    
+    #creating data.frame for gamedayTable
+    gamedayTable<-dplyr::tbl_df(data.table(data.frame(Away = character(),
+                                                      Home = character(),
+                                                      Away.Score = double(),
+                                                      Home.Score = double(),
+                                                      stringsAsFactors=FALSE
+    )))
+    
+    #creating data.frame for gamedayTableZone
+    gamedayTableZone<-dplyr::tbl_df(data.table(data.frame(Away = character(),
+                                                          Home = character(),
+                                                          Away.Score = double(),
+                                                          Home.Score = double(),
+                                                          Total.Points=double(),
+                                                          Difference=double(),
+                                                          Game.Ranking=double(),
+                                                          stringsAsFactors=FALSE
+    )))
+    
+    #creating data.frame for gameday101
+    gameday101<-dplyr::tbl_df(data.table(data.frame(Team = character(),
+                                                    Score = double(),
+                                                    stringsAsFactors=FALSE
+    )))
+    
+    #Processing gamedayTable 
+    for(i in 1:nrow(gameday)){
+      gamedayTable[i,] <- c(gameday$Away[i],gameday$Home[i],gameday$Away.Score[i],gameday$Home.Score[i])
+    }
+    
+    
+    
+    gamedayTable$Away.Score <- as.numeric(gamedayTable$Away.Score)
+    gamedayTable$Home.Score <- as.numeric(gamedayTable$Home.Score)
+    
+    
+    gamedayTable <- transform(gamedayTable, Total.Points = (Home.Score+Away.Score))
+    gamedayTable <- transform(gamedayTable, Difference = abs((Home.Score-Away.Score)))
+    gamedayTable <- transform(gamedayTable, Game.Ranking = gameRanking(Home.Score,Away.Score))
+    
+    #Processing gamedayTableZone
+    for(i in 1:nrow(gameday)){
+      gamedayTableZone[i,] <- c(gamedayTable$Away[i],gamedayTable$Home[i],gamedayTable$Away.Score[i],gamedayTable$Home.Score[i],gamedayTable$Total.Points[i],
+                                gamedayTable$Difference[i], gamedayTable$Game.Ranking[i])
+    }
+    
+    GameZ <<- "Cold"
+    Game.Zone.Column = sapply(gamedayTable$Game.Ranking, function(x) {
+      if(x<2) GameZ = "Very Cold"
+      if(x>8) GameZ = "Very Hot"
+      if(x<8 && x>7) GameZ = "Hot"
+      if(x<7 && x>4) GameZ = "Medium"
+      if(x<5 && x>2) GameZ = "Cold"
+      return(GameZ)
+    })
+    gamedayTableZone["Game.Zone"] <- Game.Zone.Column
+    
+    #Processing gameday101
+    for(i in 1:nrow(gameday)){
+      gameday101[(i*2)-1,] <- c(gameday$Away[i], gameday$Away.Score[i])
+      gameday101[(i*2),] <- c(gameday$Home[i], gameday$Home.Score[i])
+    }
+    gameday101$Score <- as.numeric(gameday101$Score)
+    
+    gameday101<- transform(gameday101, Points = (Score-101))
+    
+    GameQ <<- "Low Score"
+    Game.Quantity.Column = sapply(gameday101$Points, function(x) {
+      if(x < 4 && x > -4) GameQ = "Average Score"
+      if(x > 3) GameQ = "High Score"
+      if(x < -3) GameQ = "Low Score"
+      return(GameQ)
+    })
+    gameday101["Game.Quantity"] <- Game.Quantity.Column
 
 
     ###put transformations here and use <<- to assign to vars outside of function.
     ###Also add the transforamtions in the begginnig, with the demo data.
-
+    gameday101 <<- gameday101
+    gamedayTableZone <<- gamedayTableZone
+    gamedayTable <<- gamedayTable
     gameday <<- gameday
 
     gameday
@@ -210,9 +299,6 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
 
   observeEvent(input$reset,{
     # gameday <<- read.csv("data/gamedayOption2.csv")
-    gamedayTable <<- read.csv("data/gamedayTable.csv")
-    gameday101 <<- read.csv("data/gameday101.csv")
-    gamedayTableZone <<- read.csv("data/gamedayTableZone.csv")
     players <<- dplyr::tbl_df(data.table(read.csv("data/players.csv",stringsAsFactors=FALSE)))
     # players_barplot<- read.csv("data/players_barplot.csv", sep=";")
 
@@ -242,6 +328,103 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
     players_barplot <- transform(players_barplot, Points.Minute = (Points/Minutes.Average))
 
     players_barplot <<- players_barplot
+    
+    gameday <- dplyr::tbl_df(data.table(read.csv("data/gameday.csv",stringsAsFactors=FALSE)))
+    
+    #creating data.frame for barplot
+    players_barplot<-dplyr::tbl_df(data.table(data.frame(Position = character(),
+                                                         Name = character(),
+                                                         Salary = integer(),
+                                                         Team = character(),
+                                                         vsTeam = character(),
+                                                         Minutes.Average = double(),
+                                                         Points.Type = character(),
+                                                         Points = double(),
+                                                         stringsAsFactors=FALSE
+    )))
+    
+    #creating data.frame for gamedayTable
+    gamedayTable<-dplyr::tbl_df(data.table(data.frame(Away = character(),
+                                                      Home = character(),
+                                                      Away.Score = double(),
+                                                      Home.Score = double(),
+                                                      stringsAsFactors=FALSE
+    )))
+    
+    #creating data.frame for gamedayTableZone
+    gamedayTableZone<-dplyr::tbl_df(data.table(data.frame(Away = character(),
+                                                          Home = character(),
+                                                          Away.Score = double(),
+                                                          Home.Score = double(),
+                                                          Total.Points=double(),
+                                                          Difference=double(),
+                                                          Game.Ranking=double(),
+                                                          stringsAsFactors=FALSE
+    )))
+    
+    #creating data.frame for gameday101
+    gameday101<-dplyr::tbl_df(data.table(data.frame(Team = character(),
+                                                    Score = double(),
+                                                    stringsAsFactors=FALSE
+    )))
+    
+    
+    #Processing gamedayTable 
+    for(i in 1:nrow(gameday)){
+      gamedayTable[i,] <- c(gameday$Away[i],gameday$Home[i],gameday$Away.Score[i],gameday$Home.Score[i])
+    }
+    
+    gamedayTable$Away.Score <- as.numeric(gamedayTable$Away.Score)
+    gamedayTable$Home.Score <- as.numeric(gamedayTable$Home.Score)
+    
+    
+    gamedayTable <- transform(gamedayTable, Total.Points = (Home.Score+Away.Score))
+    gamedayTable <- transform(gamedayTable, Difference = abs((Home.Score-Away.Score)))
+    gamedayTable <- transform(gamedayTable, Game.Ranking = gameRanking(Home.Score,Away.Score))
+    
+    #Processing gamedayTableZone
+    for(i in 1:nrow(gameday)){
+      gamedayTableZone[i,] <- c(gamedayTable$Away[i],gamedayTable$Home[i],gamedayTable$Away.Score[i],gamedayTable$Home.Score[i],gamedayTable$Total.Points[i],
+                                gamedayTable$Difference[i], gamedayTable$Game.Ranking[i])
+    }
+    
+    GameZ <<- "Cold"
+    Game.Zone.Column = sapply(gamedayTable$Game.Ranking, function(x) {
+      if(x<2) GameZ = "Very Cold"
+      if(x>8) GameZ = "Very Hot"
+      if(x<8 && x>7) GameZ = "Hot"
+      if(x<7 && x>4) GameZ = "Medium"
+      if(x<5 && x>2) GameZ = "Cold"
+      return(GameZ)
+    })
+    gamedayTableZone["Game.Zone"] <- Game.Zone.Column
+    
+    #Processing gameday101
+    for(i in 1:nrow(gameday)){
+      gameday101[(i*2)-1,] <- c(gameday$Away[i], gameday$Away.Score[i])
+      gameday101[(i*2),] <- c(gameday$Home[i], gameday$Home.Score[i])
+    }
+    gameday101$Score <- as.numeric(gameday101$Score)
+    
+    gameday101<- transform(gameday101, Points = (Score-101))
+    
+    GameQ <<- "Low Score"
+    Game.Quantity.Column = sapply(gameday101$Points, function(x) {
+      if(x < 4 && x > -4) GameQ = "Average Score"
+      if(x > 3) GameQ = "High Score"
+      if(x < -3) GameQ = "Low Score"
+      return(GameQ)
+    })
+    gameday101["Game.Quantity"] <- Game.Quantity.Column
+    
+    
+    ###put transformations here and use <<- to assign to vars outside of function.
+    ###Also add the transforamtions in the begginnig, with the demo data.
+    gameday101 <<- gameday101
+    gamedayTableZone <<- gamedayTableZone
+    gamedayTable <<- gamedayTable
+    gameday <<- gameday
+    
 
     shinyjs::js$refresh()
 
