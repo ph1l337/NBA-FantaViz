@@ -21,7 +21,7 @@ shinyUI(
     ),
 
 
-  navbarPage(title = div(img(src="resources/nba-fantaviz.png",heigh=10, "    ","NBA FantaViz")),
+  navbarPage(title = div(img(src="resources/nba-fantaviz.png", width=82, heigth = 35),"NBA FantaViz"),
       #********* INPUT TAB****************
       tabPanel("Input",
                sidebarLayout(
@@ -97,7 +97,9 @@ shinyUI(
                                            choices = c("Points", "Points/Salary","Points/Minute"),
                                            selected = "Points",
                                            inline = T),
-                              helpText("You can select which projections are being displayed by clicking on the points.")),
+                              helpText("You can select which projections are being displayed by clicking on the points."),
+                              div(img(src="resources/graph_help.png", width=150, height = 30))
+                        ),
 
 
                        column(width=4,
@@ -114,13 +116,15 @@ shinyUI(
 #                                    selected = "Projected"
 #                                    ),
                         uiOutput("choose_team"),
-                        helpText("Hint: you can deselect several teams by clicking on one and clicking on another while holding shift."),
-                br(),br()
+                        helpText("Hint: you can deselect several teams by clicking on one and clicking on another while holding shift.")
+               
                          ),
               fluidRow(
-               br(),br(),
-               helpText("Note: Names of the players will apear when less than 50 are displayed or when hovering the mouse over the bar",align="center"),
-               br()),
+               ),
+              fluidRow(tags$hr(),
+                       helpText("Note: Names of the players will apear when less than 50 are displayed or when hovering the mouse over the bar",align="center"),
+                       br(),br(),
+                       br()),
               fluidRow(column(12,
 
                        rCharts::showOutput("chart1","nvd3")
