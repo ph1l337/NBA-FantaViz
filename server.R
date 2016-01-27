@@ -609,7 +609,7 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
                                     //as example just join all the info into one line
                                     return Object.keys(d[0]).map(function( key ){
                                     if(key=='Away'){
-                                      return( '   ' +  d[0][key] + ' vs ')
+                                      return( '----->'+d[0][key] + ' vs ')
                                     }
                                     if(key=='Home'){
                                       return( d[0][key])
