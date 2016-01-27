@@ -453,7 +453,7 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
     }
 
     if(input$player_attr=="Points/Minute"){
-      p1 <- nPlot(Points.Salary ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarChart")
+      p1 <- nPlot(Points.Minute ~ Name, group = 'Points.Type', data = players.toPlot, type = "multiBarChart")
       p1$yAxis(axisLabel = "Points/Minute")
     }
 
@@ -464,7 +464,7 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
     # p1$xAxis(width = 150)
     p1$chart(reduceXTicks = FALSE,rotateLabels=-45)
     p1$chart(tooltipContent = "#! function(key, val, e, graph){
-                return '<h4>' + '<font color=black>'+ val +'</font>'+ '</h4>' + '<p>'+ key + ': ' + '<b>' + e + '</b>' } !#")
+                return '<h4>' + '<center><font color=black>'+ val +'</font></center>'+ '</h4>' + '<p>'+ key + ': ' + '<b>' + e + '</b>' } !#")
     # p1$xAxis(staggerLabels = TRUE)
 
     #50
@@ -508,6 +508,8 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
       p2$chart(color = c('#5882FA', '#F7BE81', '#FF0000'))
       p2$chart(reduceXTicks = FALSE)
       p2$xAxis(staggerLabels = TRUE)
+      p2$chart(tooltipContent = "#! function(key, val, e, graph){
+                return '<h4>' + '<center><font color=black>'+ val +'</font></center>'+ '</h4>' + '<p>'+ key + ': ' + '<b>' + e + '</b>' } !#")
 
       #options(RCHART_WIDTH = 400)
       return(p2)

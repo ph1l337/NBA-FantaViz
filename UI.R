@@ -84,7 +84,7 @@ shinyUI(
    tabPanel("Players",
             fluidPage(
               fluidRow(column(width=4,
-
+                              
                               h3("Attributes"),
                               helpText("Choose the attributes on how you want to compare the players."),
 
@@ -96,15 +96,16 @@ shinyUI(
                                            label = "Choose an attribute",
                                            choices = c("Points", "Points/Salary","Points/Minute"),
                                            selected = "Points",
-                                           inline = T),
-                              helpText("You can select which projections are being displayed by clicking on the points."),
-                              div(img(src="resources/graph_help.png", width=150, height = 30))
+                                           inline = T)
+                             
                         ),
 
 
                        column(width=4,
                               h3("Filters"),
-                              uiOutput("salary_filter")
+                              uiOutput("salary_filter"),br(),
+                              helpText("You can select which projections are being displayed by clicking on the points."),
+                              div(img(src="resources/graph_help.png", width=150, height = 30))
 
                        ),
 
