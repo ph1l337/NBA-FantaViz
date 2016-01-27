@@ -535,7 +535,7 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
     p2$yAxis(axisLabel = "Total Points")
     p2$xAxis(axisLabel = "Point Difference")
     #p2$chart(size = '#! function(d){return d.Game.Ranking} !#')
-    p2$chart(sizeRange = c(700,700))
+    p2$chart(sizeRange = c(280,280)) #Balls size
     p2$chart(showControls=FALSE, margin = list(left=300, right = 270, bottom = 150, top = 150))
     p2$chart( xDomain = sort(range(gamedayTableZone$Difference),decreasing=T) )
     p2$chart(color = c('#0404B4', '#5882FA', '#F7BE81', '#FF8000', '#FF0000'))
