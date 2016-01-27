@@ -21,7 +21,7 @@ shinyUI(
     ),
 
 
-  navbarPage("NBA FantaViz",
+  navbarPage(title = div(img(src="resources/nba-fantaviz.png",heigh=10, "    ","NBA FantaViz")),
       #********* INPUT TAB****************
       tabPanel("Input",
                sidebarLayout(
