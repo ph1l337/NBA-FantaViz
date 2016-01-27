@@ -21,7 +21,7 @@ shinyUI(
     ),
 
 
-  navbarPage(title = div(img(src="resources/nba-fantaviz.png", width=82, heigth = 35),"NBA FantaViz"),
+  navbarPage(title = div(img(src="resources/nba-fantaviz.png", width=35, heigth = 35),"NBA FantaViz"),
       #********* INPUT TAB****************
       tabPanel("Input",
                sidebarLayout(
@@ -167,6 +167,23 @@ shinyUI(
       ),
       #********* About TAB ****************
       tabPanel("About",
-         fluidPage()
+         fluidPage(
+           fluidRow(
+             h4("NBA FantaViz was created as part of a project at Technical University of Madrid by:",align="center"),
+            br(),br(),br(),br(),br(),br()
+           ),
+           fluidRow(
+             column(width = 4, div(img(src="resources/hugo.png"),
+                    h5("Hugo Santana"),align="center")
+                    ),
+             column(width = 4,
+                    div(img(src="resources/fanataviz_about.png"),align="center")
+                    ),
+             column(width = 4, div(img(src="resources/philipp.png"),
+                    h5("Philipp Eisen")
+                    ),align="center")
+             
+           )
+         )
       )
 )))

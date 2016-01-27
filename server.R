@@ -6,7 +6,7 @@ library(shinyjs)
 #****Requires*******
 require(rCharts)
 #****Sources********
-source("generalUtils.r", local=TRUE)
+source("generalUtils.R", local=TRUE)
 #Nothing yet.
 
 #***Related to File upload Tab.
