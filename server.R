@@ -498,9 +498,11 @@ gameday101["Game.Quantity"] <- Game.Quantity.Column
   #********* Server side for games ******************
   # Table View
   output$summary <- DT::renderDataTable(
-    DT::datatable(gamedayTable, options = list(dom='t', autoWidth = TRUE,
-                                          columnDefs = list(list(width = '80px', targets = "_all"))))
-  )
+    DT::datatable(gamedayTable, colnames=c("Away Team","Home Team", "Away Score", "Home Score", "Total Points", "Difference", "Game Ranking"),
+                  
+                  options = list(dom='t', autoWidth = TRUE,
+                                          columnDefs = list(list(width = '80px', targets = "_all")))))
+  
 
   # 101 View
   output$games1 <- renderChart({
